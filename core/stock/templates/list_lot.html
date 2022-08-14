@@ -1,0 +1,68 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 5%;">Nro</th>
+        <th scope="col" style="width: 10%;">Fecha</th>
+        <th scope="col" style="width: 20%;">Product</th>
+        <th scope="col" style="width: 20%;">Proveedor</th>
+        <th scope="col" style="width: 5%;">Precio U.</th>
+        <th scope="col" style="width: 5%;">Cantidad</th>
+        <th scope="col" style="width: 5%;">Total</th>
+        <th scope="col" style="width: 5%;">Condición</th>
+        <th scope="col" style="width: 5%;">¿Pagado?</th>
+        <th scope="col" style="width: 20%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for lot in lots %}
+    <tr>
+        <td>{{ lot.id }}</td>
+        <td>{{ lot.lot_date }}</td>
+        <td>{{ lot.product }}</td>
+        <td>{{ lot.provider }}</td>
+        <td>${{ lot.price }}</td>
+        <td>{{ lot.quantity }}</td>
+        <td>${{ lot.total }}</td>
+        <td>{{ lot.pay_condition }} días</td>
+        <td>{{ lot.is_pay }}</td>
+        <td>
+            <!-- Update Button ver manera de hacerlo global-->
+            <a type="button" class="btn" href="{% url 'update-lot' pk=lot.id %}"><i class="fa-solid fa-marker"></i></a>
+            <!-- Delete Button ver manera de hacerlo global-->
+            <button type="button" data-bs-toggle="modal"  class="btn" data-bs-target="#delete-modal{{ lot.id }}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <div class="modal fade" id="delete-modal{{ lot.id }}" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro que desea eliminar este lote?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Al eliminar un lote, se borrarán automáticamente todos sus datos de stock<br>
+                            Stock: <b>{{lot.name}}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
+                            <form action="{% url 'delete-lot' pk=lot.id %}" method="POST">
+                                {% csrf_token %}
+                                <button value={{lot.id}} name="lot_id" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="8" class="text-center">No se encuentran registros de lotes</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

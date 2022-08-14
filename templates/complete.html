@@ -1,0 +1,46 @@
+{% extends 'home.html' %}
+{% load static %}
+{% block head %}
+{% endblock %}
+
+    {% block body %}
+    <!-- Header -->
+    {% include 'header.html' %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- SideBar -->
+            {% include 'sidebar.html' %}
+            <!-- Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between">
+                    {% block contentheader %}
+                    <!-- Irán los H3 de cada template -->
+                    <h3>{{title}}</h3>
+                    {% endblock %}
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ list_url }}">{{ entity }}</a></li>
+                    </ol>
+                </div>
+                <hr id="hr_cabecera">
+                <!-- Dashboard -->
+                <div class="content">
+                    {% block content %}
+
+                    {% endblock %}
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        {% block footer %}
+
+        {% endblock %}
+    </div>
+    <!-- Block javascript -->
+{% block javascript %}
+
+{% endblock %}
+
+
+{% endblock %}

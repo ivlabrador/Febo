@@ -1,0 +1,64 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 5%;">Nro</th>
+        <th scope="col" style="width: 15%;">Razón Social</th>
+        <th scope="col" style="width: 15%;">Nombre</th>
+        <th scope="col" style="width: 15%;">CUIT</th>
+        <th scope="col" style="width: 20%;">Dirección</th>
+        <th scope="col" style="width: 5%;">Teléfono</th>
+        <th scope="col" style="width: 5%;">email</th>
+        <th scope="col" style="width: 20%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for client in clients %}
+    <tr>
+        <td>{{ client.id }}</td>
+        <td>{{ client.name }}</td>
+        <td>{{ client.f_name }}</td>
+        <td>{{ client.fiscal_number }}</td>
+        <td>{{ client.address }}</td>
+        <td>{{ client.phone_number }}</td>
+        <td>{{ client.email }}</td>
+        <td>
+            <!-- Update Button ver manera de hacerlo global-->
+            <a type="button" class="btn" href="{% url 'update-client' pk=client.id %}"><i class="fa-solid fa-marker"></i></a>
+            <!-- Delete Button ver manera de hacerlo global-->
+            <button type="button" data-bs-toggle="modal"  class="btn" data-bs-target="#delete-modal{{ client.id }}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <div class="modal fade" id="delete-modal{{ client.id }}" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro que desea eliminar este cliente?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Al eliminar un cliente, se borrarán automáticamente todos sus datos relacionados<br>
+                            Cliente: <b>{{client.name}}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
+                            <form action="{% url 'delete-client' pk=client.id %}" method="POST">
+                                {% csrf_token %}
+                                <button value={{client.id}} name="client_id" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="8" class="text-center">No se encuentran registros de clientes</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

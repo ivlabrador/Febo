@@ -1,0 +1,64 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 5%;">Nro</th>
+        <th scope="col" style="width: 15%;">Razón Social</th>
+        <th scope="col" style="width: 15%;">Nombre</th>
+        <th scope="col" style="width: 15%;">CUIT</th>
+        <th scope="col" style="width: 20%;">Dirección</th>
+        <th scope="col" style="width: 5%;">Teléfono</th>
+        <th scope="col" style="width: 5%;">email</th>
+        <th scope="col" style="width: 20%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for provider in providers %}
+    <tr>
+        <td>{{ provider.id }}</td>
+        <td>{{ provider.name }}</td>
+        <td>{{ provider.f_name }}</td>
+        <td>{{ provider.fiscal_number }}</td>
+        <td>{{ provider.address }}</td>
+        <td>{{ provider.phone_number }}</td>
+        <td>{{ provider.email }}</td>
+        <td>
+            <!-- Update Button ver manera de hacerlo global-->
+            <a type="button" class="btn" href="{% url 'update-provider' pk=provider.id %}"><i class="fa-solid fa-marker"></i></a>
+            <!-- Delete Button ver manera de hacerlo global-->
+            <button type="button" data-bs-toggle="modal"  class="btn" data-bs-target="#delete-modal{{ provider.id }}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <div class="modal fade" id="delete-modal{{ provider.id }}" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro que desea eliminar este proveedor?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Al eliminar un proveedor, se borrarán automáticamente todos sus datos relacionados<br>
+                            Proveedor: <b>{{provider.name}}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
+                            <form action="{% url 'delete-provider' pk=provider.id %}" method="POST">
+                                {% csrf_token %}
+                                <button value={{provider.id}} name="provider_id" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="8" class="text-center">No se encuentran registros de proveedores</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

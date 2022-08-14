@@ -1,0 +1,65 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 5%;">Nro</th>
+        <th scope="col" style="width: 15%;">Nombre</th>
+        <th scope="col" style="width: 15%;">Marca</th>
+        <th scope="col" style="width: 15%;">Modelo</th>
+        <th scope="col" style="width: 25%;">Descripción</th>
+        <th scope="col" style="width: 5%;">IVA</th>
+        <th scope="col" style="width: 20%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for product in products %}
+    <tr>
+        <td>{{ product.id }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.brand }}</td>
+        <td>{{ product.model }}</td>
+        <td>{{ product.description }}</td>
+        <td>{{ product.iva }}%</td>
+        <td>
+            <!-- Update Button ver manera de hacerlo global-->
+            <a type="button" class="btn" href="{% url 'update-product' pk=product.id %}"><i class="fa-solid fa-marker"></i></a>
+            <!-- Delete Button ver manera de hacerlo global-->
+            <button type="button" data-bs-toggle="modal"  class="btn" data-bs-target="#delete-modal{{ product.id }}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <div class="modal fade" id="delete-modal{{ product.id }}" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro que desea eliminar este producto?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Si el producto es eliminado se eliminarán todos sus lotes y stocks existentes<br>
+                            Producto: <b>{{product.name}}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
+                            <form action="{% url 'delete-product' pk=product.id %}" method="POST">
+                                {% csrf_token %}
+                                <button value={{product.id}} name="product_id" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+
+
+    {% empty %}
+    <tr>
+        <td colspan="8" class="text-center">No se encuentran registros de productos</td>
+    </tr>
+    {% endfor %}
+
+{% endblock %}

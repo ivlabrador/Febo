@@ -1,0 +1,77 @@
+*{
+    margin: 0 auto;
+}
+
+
+
+/*  Sidebar  */
+#sidebarMenu{
+    background-color: #1F2525;
+    height: 100%
+    float: left;
+}
+#sidebarMenu .sidebar-content{
+    margin: 10px;
+}
+/*  Sidebar - USER:
+ contendrá poca info del usuario pero debe ocupar mas espacio que los demas divs
+ */
+#sidebarMenu .sidebar-content .sidebar-user{
+    margin: 0 auto;
+    height: 40px;
+    margin-top: 20px;
+ }
+ .sidebar-user .image{
+    margin-left:20px;
+ }
+.sidebar-user div strong{
+    color: #E8EEEE;
+    margin-left: 5px;
+}
+#sidebarMenu .sidebar-content hr{
+    color: #E8EEEE;
+}
+.sidebar-container{
+    margin-top: 30px;
+}
+.sidebar-item{
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+.sidebar-item a{
+    font-size: 17px;
+    text-decoration: none;
+    color: #E8EEEE;
+}
+
+.sidebar-item a:hover{
+    color: #f6e570;
+}
+.sidebar-item div{
+    margin-top: 5px;
+}
+.sidebar-item div a{
+    display:block;
+    width: 100%;
+    padding: 0.25rem 1rem;
+    clear: both;
+    font-weight: 400;
+    text-align: inherit;
+    font-size: 14px;
+    text-decoration: none;
+    color: #E8EEEE;
+    white-space: nowrap;
+}
+.sidebar-item div a:hover{
+    background-color: transparent;
+    color: #f6e570;
+    transition: 300ms;
+}
+
+
+
+
+
+
+
