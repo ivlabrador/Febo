@@ -1,12 +1,11 @@
 from django.contrib.auth import login, logout
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView, RedirectView
-
 from config import settings
 from core.login.forms import ResetPasswordForm, ChangePasswordForm, AuthenticationForm
 from core.user.models import User
@@ -120,8 +119,7 @@ class ResetPasswordView(FormView):
         except Exception as e:
             data['error'] = str(e)
         return data
-        """
-"""
+
 
     def post(self, request, *args, **kwargs):
         data = {}

@@ -8,9 +8,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>{{ title }}</title>
     <!-- My css -->
-    <link rel="stylesheet" href="{% static 'css/stylee.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/styleee.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/cont-style.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}" type="text/css">
      <!-- J Query-->
-
     <script type="text/javascript" charset="utf8" src="{% static 'lib/jQuery-3.6.0/jquery-3.6.0.min.js' %}"></script>
         <!-- Font Awesome Icons -->
     <script type="text/javascript" charset="utf8" src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
@@ -24,17 +25,20 @@
     <script type="text/javascript" charset="utf8" src="{% static 'lib/bootstrap-5.0.2/dist/js/bootstrap.min.js' %}"></script>
     <!-- Sweetalert -->
     <script type="text/javascript" charset="utf8" src="{% static 'lib/sweetalert/dist/sweetalert2.all.min.js' %}"></script>
-    <!-- Own JS -->
+    <!-- My JS -->
     <script type="text/javascript" charset="utf8" src="{% static 'js/functions.js' %}"></script>
     <script type="text/javascript" charset="utf8" src="{% static 'js/main.js' %}"></script>
 
+    <!-- Jquery - Confirm -->
+    <script type="text/javascript" charset="utf8" src="{% static 'lib/jquery-confirm/dist/jquery-confirm.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/jquery-confirm/dist/jquery-confirm.min.css' %}">
 
     <!-- Block head -->
     {% block head %}
 
     {% endblock %}
 </head>
-<body>
+<body id="my-body">
     {% block body %}
 
     {% endblock %}

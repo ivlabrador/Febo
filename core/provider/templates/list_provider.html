@@ -12,7 +12,7 @@
         <th scope="col" style="width: 15%;">CUIT</th>
         <th scope="col" style="width: 20%;">Dirección</th>
         <th scope="col" style="width: 5%;">Teléfono</th>
-        <th scope="col" style="width: 5%;">email</th>
+        <th scope="col" style="width: 5%;">Email</th>
         <th scope="col" style="width: 20%;">Opciones</th>
     </tr>
 {% endblock %}
@@ -24,7 +24,7 @@
         <td>{{ provider.name }}</td>
         <td>{{ provider.f_name }}</td>
         <td>{{ provider.fiscal_number }}</td>
-        <td>{{ provider.address }}</td>
+        <td>{{ provider.address }}-{{provider.city}}</td>
         <td>{{ provider.phone_number }}</td>
         <td>{{ provider.email }}</td>
         <td>

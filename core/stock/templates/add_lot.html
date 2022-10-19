@@ -1,6 +1,16 @@
-{% extends 'complete.html' %}
-{% include "bootstrap_datepicker_plus/input.html" %}
+{% extends 'list.html' %}
 {% load static %}
+{% block head_list %}
+<link href="{% static 'lib/select2-4.1.0/dist/css/select2.css' %}" rel="stylesheet"/>
+<script src="{% static 'lib/select2-4.1.0/dist/js/select2.min.js' %}"></script>
+<!-- Select2 Para iniciar busquedas -->
+<link href="{% static 'lib/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.css' %}" rel="stylesheet"/>
+<script src="{% static 'lib/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.js' %}"></script>
+<!-- Mi JS -->
+<script type="text/javascript" charset="utf8" src="{% static 'js/stock/lotform.js' %}"></script>
+<!-- My css -->
+<link rel="stylesheet" href="{% static 'css/formsale-style.css' %}">
+{% endblock %}
 {% block content %}
     {% if messages %}
         {% for message in messages %}
@@ -12,46 +22,147 @@
             </div>
         {% endfor %}
     {% endif %}
-    <div class="form-content">
-        <div class="form">
-            <form id='add-lot-form' method="POST" action="">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="{{action}}">
-                {% for field in form %}
-                <div class="mb-3">
-                    <label for="{{field.name}}" class="form-label">{{field.label}}</label>
-                    {{field}}
+<form id='add-lot-form' method="POST" data-url="{{ list_url }}">
+    <div class="sale">
+        <div class="sale-body">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card" id="card-1" style="width: 100%">
+                        <div class="card-sale-body" id="card-body-1">
+                            <div class="container-sale" id="container-fluid">
+                                <input type="hidden" name="action" value="{{action}}">
+                                <div class="search-group" id="search-group">
+                                    <label>Buscador de productos:</label>
+                                    <div class="input-group" id="input-group">
+                                        <select class="search_product  select2" id="search_product_lot" style="width:70%;"></select>
+                                        <div class="" id="button-search">
+                                            <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class='bx bxs-color'></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item btnSearchProducts">
+                                                        <i class="fas fa-search"></i> Buscar productos
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item btnClearSearch">
+                                                        <i class="fas fa-times"></i> Limpiar búsqueda
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item btnRemoveAll">
+                                                        <i class="fas fa-trash"></i> Eliminar todos mis items
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="table-group">
+                                    <table class="table table-bordered" id="dataLot" >
+                                        <thead>
+                                        <tr>
+                                            <th>Eliminar</th>
+                                            <th>Producto</th>
+                                            <th>IVA</th>
+                                            <th>Precio</th>
+                                            <th>Cantidad</th>
+                                            <th>Desc.</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {% endfor %}
-                <br>
-                <input type="submit" value="Agregar Lote">
-            </form>
-            <script type="application/javascript">
-                $('#add-lot-form').on('submit', function(e){
-                    e.preventDefault();
-                    var parameters = $(this).serializeArray();
-                    $.ajax({
-                        url: '{% url 'add-lot' %}',
-                        type: 'POST',
-                        data: parameters,
-                        dataType: 'json'
-                    }).done(function(data){
-                        if(!data.hasOwnProperty('error')){
-                            location.href = '{{ list_url }}';
-                            return false;
-                        };
-                        message_error(data.error);
-                    }).always(function(data){
-                    });
-                });
-                </script>
+                <div class="col-lg-4">
+                            <div class="card" id="card-2">
+                                <div class="card-sale-2">
+                                    <div class="container-fluid">
+                                        <input type="hidden" name="action" value="{{ action }}">
+                                        <div class="form-group">
+                                            <label>Fecha de compra:</label>
+                                            {{ form.lot_date }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Proveedor:</label>
+                                            <div class="input-group" id="input-group-2">
+                                                <div class="input-group-append" id="input-group-2-sub">
+                                                    <select class="form-control select2" id="search_provider" style="width: 210px;"></select>
+                                                    <button class="btn btnAddProvider" type="button">
+                                                        <i class="fas fa-user-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Factura tipo:</label>
+                                            {{ form.buy_type }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Factura N°:</label>
+                                            {{ form.buy_num }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tipo de Pago:</label>
+                                            {{ form.pay_type }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Condición de Pago:</label>
+                                            {{ form.pay_condition }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Subtotal:</label>
+                                            {{ form.subtotal }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Total IVA:</label>
+                                            {{ form.total_iva }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Total descuento:</label>
+                                            {{ form.total_discount }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Total a pagar:</label>
+                                            {{ form.total }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cargar factura:</label>
+                                            {{ form.payment_slip }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>¿Cargar en compras?</label>
+                                            {{ form.make_invoice }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>¿Pagado?</label>
+                                            {{ form.is_pay }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="sale-footer">
+                <button type="submit" class="btn btn-dark" form="add-lot-form">
+                    <i class="fas fa-save"></i> Guardar registro
+                </button>
+                <a href="{{ list_url }}" class="btn btn-dark">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
         </div>
-    </div>
-    {% block javascript %}
+    </form>
+
+    <!-- Edit Script -->
     <script type="text/javascript">
-    $(function () {
-        $('#datepicker').datepicker({ dateFormat: 'dd-mm-yy' });
-    });
+        lot.details.products = {{ products|safe }};
     </script>
-    {% endblock %}
     {% endblock %}

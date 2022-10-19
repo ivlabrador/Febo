@@ -1,7 +1,7 @@
 from django.db import models
-from datetime import datetime
 from config import settings
 from django.forms import model_to_dict
+
 
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
@@ -16,6 +16,7 @@ class Category(models.Model):
         item = model_to_dict(self)
         return item
 
+
     class Meta:
         verbose_name = 'Categoría'
         verbose_name_plural = 'Categorías'
@@ -25,11 +26,11 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
     brand = models.CharField(max_length=150, verbose_name='Marca', blank=True)
-    model = models.CharField(max_length=50, verbose_name='Tipo', unique=True)
-    iva = models.CharField(choices=settings.IVA_CONDITION, verbose_name='IVA', null=False, max_length=10)
+    model = models.CharField(max_length=50, verbose_name='Modelo', unique=True)
+    iva = models.CharField(choices=settings.IVA_CONDITION, verbose_name='IVA', null=False, max_length=4)
     description = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
-    category = models.ManyToManyField(Category, verbose_name='Categorías', blank=True)
-    image = models.ImageField(upload_to='product/%d/%m/%Y', null=True, blank=True, verbose_name='Imagen')
+    category = models.ManyToManyField(Category, verbose_name='Categorías')
+    image = models.ImageField(upload_to='product/%Y/%m/%d', null=True, blank=True, verbose_name='Imagen')
     is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     created_at = models.DateField(auto_now_add=True, null=False, verbose_name='Inserido en el sistema')
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name='Actualizado')
@@ -39,6 +40,7 @@ class Product(models.Model):
 
     def toJSON(self):
         item = model_to_dict(self)
+        item['category'] = [i.toJSON() for i in self.category.all()]
         item['image'] = self.get_image()
         return item
 
@@ -49,12 +51,10 @@ class Product(models.Model):
 
     def get_iva(self):
         if self.iva:
-            iva = int(self.iva)
+            iva = float(self.iva)
             return iva
-
-
 
     class Meta:
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
-        ordering = ['id']
+        ordering = ['-id']

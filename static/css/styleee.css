@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+}
+#my-body{
+    background-color: #f7f8fb;
+}
+
+/* Modales */
+
+/* Modal - Eliminar */
+.modal-dialog .modal-content .modal-footer button{
+    transition: all 0.4s ease;
+}
+
+.modal-dialog .modal-content .modal-footer btn-outline-dark{
+    color: #0f171e;
+}
+.modal-dialog .modal-content .modal-footer btn-outline-dark:hover{
+    background-color: #0f171e;
+}

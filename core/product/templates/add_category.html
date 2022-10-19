@@ -12,7 +12,7 @@
         {% endfor %}
     {% endif %}
     <div class="form-content">
-        <div class="form">
+        <div class="form-category">
             <form id='add-category-form' method="POST" action="">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="{{action}}">
@@ -22,10 +22,11 @@
                     {{field}}
                 </div>
                 {% endfor %}
-                <br>
-                <input type="submit" class="btn btn-light" value="Agregar categoría">
             </form>
-            <script type="application/javascript">
+        </div>
+        <input type="submit" class="btn" form="add-category-form" value="Agregar categoría">
+    </div>
+    <script type="application/javascript">
                 $('#add-category-form').on('submit', function(e){
                     e.preventDefault();
                     var parameters = $(this).serializeArray();
@@ -43,10 +44,7 @@
                     }).always(function(data){
                     });
                 });
-                </script>
-        </div>
-    </div>
-
+    </script>
 
 {% block javascript %}
 

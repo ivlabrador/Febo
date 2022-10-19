@@ -12,20 +12,50 @@
         {% endfor %}
     {% endif %}
     <div class="form-content">
-        <div class="form">
-            <form id='add-provider-form' method="POST" action="">
+        <div class="form-provider">
+            <form id='add-provider-form' class="row g-3" method="POST" action="">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="{{action}}">
-                {% for field in form %}
-                <div class="mb-3">
-                    <label for="{{field.name}}" class="form-label">{{field.label}}</label>
-                    {{field}}
+                <div class="col-md-5">
+                    <label for="{{form.name.label}}" class="form-label">{{form.name.label}}</label>
+                    {{form.name}}
                 </div>
-                {% endfor %}
-                <br>
-                <input type="submit" value="Agregar proveedor">
+                <div class="col-md-5">
+                    <label for="{{form.f_name.label}}" class="form-label">{{form.f_name.label}}</label>
+                    {{form.f_name}}
+                </div>
+                <div class="col-md-2">
+                    <label for="{{form.iva_condition.label}}" class="form-label">{{form.iva_condition.label}}</label>
+                    {{form.iva_condition}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.fiscal_number.label}}" class="form-label">{{form.fiscal_number.label}}</label>
+                    {{form.fiscal_number}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.phone_number.label}}" class="form-label">{{form.phone_number.label}}</label>
+                    {{form.phone_number}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.email.label}}" class="form-label">{{form.email.label}}</label>
+                    {{form.email}}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{form.address.label}}" class="form-label">{{form.address.label}}</label>
+                    {{form.address}}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{form.city.label}}" class="form-label">{{form.city.label}}</label>
+                    {{form.city}}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{form.state.label}}" class="form-label">{{form.state.label}}</label>
+                    {{form.state}}
+                </div>
             </form>
-            <script type="application/javascript">
+        </div>
+        <input type="submit" class="btn" form="add-provider-form" value="Agregar proveedor">
+        <script type="application/javascript">
                 $('#add-provider-form').on('submit', function(e){
                     e.preventDefault();
                     var parameters = $(this).serializeArray();
@@ -44,7 +74,6 @@
                     });
                 });
                 </script>
-        </div>
     </div>
 
 {% endblock %}

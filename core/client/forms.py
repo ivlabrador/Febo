@@ -14,10 +14,10 @@ class ClientForm(ModelForm):
         fields = '__all__'
         widgets = {
             'name': forms.TextInput(),
-            'fiscal_number': forms.TextInput(),
+            'fiscal_number': forms.TextInput(attrs={'type': 'number'}),
             'address': forms.TextInput(),
-            'phone_number': forms.TextInput(),
-            'email': forms.TextInput()
+            'phone_number': forms.TextInput(attrs={'type': 'number'}),
+            'email': forms.EmailInput()
         }
 
     def save(self, commit=True):

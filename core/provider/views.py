@@ -6,6 +6,8 @@ from .forms import ProviderForm
 from django.urls import reverse_lazy
 from config.permission import ValidatePermission
 from django.contrib import messages
+
+
 # Create your views here.
 class AddProvider(ValidatePermission, CreateView):
     model = Provider

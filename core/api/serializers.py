@@ -3,7 +3,6 @@ from rest_framework import serializers
 from core.client.models import Client
 from core.product.models import Category, Product
 
-
 from core.provider.models import Provider
 from core.stock.models import Lot, Stock
 from core.user.models import User

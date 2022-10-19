@@ -1,0 +1,221 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500&family=Permanent+Marker&family=Poppins:ital,wght@0,400;0,500;0,700;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@500&family=Libre+Franklin:wght@400;500;600;700&family=Montserrat:wght@200;300;400;500&family=Permanent+Marker&family=Poppins:ital,wght@0,400;0,500;0,700;1,500&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/*  Sidebar  */
+.sidebar{
+    position: fixed;
+    background-color: #0f171e;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 265px;
+    z-index:100;
+}
+.sidebar.close{
+  width: 80px;
+}
+
+/* Logo */
+.sidebar .logo{
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .logo i{
+    color: #E8EEEE;
+    font-size: 30px;
+    height: 50px;
+    min-width: 80px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.sidebar .logo .logo-name{
+      font-size: 22px;
+      color: #E8EEEE;
+      font-weight: 600;
+      transition: 0.3s ease;
+      transition-delay: 0.3s;
+}
+.sidebar.close .logo .logo-name{
+  transition-delay: 0s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Sidebar Body */
+
+.sidebar .sidebar-body{
+    height: 100%;
+    padding: 30px 0 150px 0;
+    overflow: auto;
+}
+.sidebar.close .sidebar-body{
+  overflow: visible;
+}
+.sidebar .sidebar-body::-webkit-scrollbar{
+    display: none;
+}
+
+/* Items */
+
+.sidebar .sidebar-body .sidebar-li{
+    position: relative;
+    list-style: none;
+    transition: all 0.3s ease;
+}
+.sidebar .sidebar-body .sidebar-li:hover{
+    background: #38536b;
+}
+
+.sidebar .sidebar-body .sidebar-li i{
+    height: 50px;
+    min-width: 78px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+    color: #E8EEEE;
+    transition: all 0.3s ease;
+    transition-delay: 0.3s;
+}
+/* arrow */
+.sidebar .sidebar-body .sidebar-li.showMenu i.arrow{
+    transform: rotate(-180deg);
+}
+
+.sidebar .sidebar-body .sidebar-li.showMenu i.arrow:hover{
+    cursor: pointer;
+}
+.sidebar.close .sidebar-body i.arrow{
+  display: none;
+}
+.sidebar .sidebar-body .sidebar-li i.arrow:hover{
+    cursor: pointer;
+}
+
+/* Items */
+
+.sidebar .sidebar-body .sidebar-li a{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #E8EEEE;
+}
+
+.sidebar .sidebar-body .sidebar-li .dropdown-links{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sidebar.close .sidebar-body li .dropdown-links{
+    display: block;
+}
+
+.sidebar .sidebar-body li a .item-name{
+    font-size: 16px;
+    font-weight: 400;
+    transition: all 0.4s ease;
+}
+
+.sidebar.close .sidebar-body li a .item-name{
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Sub menu */
+
+.sidebar .sidebar-body .sidebar-li .sub-menu{
+    padding: 6px 6px 14px 20px;
+    margin-top: 0px;
+    background-color:#0f171e;
+    display: none;
+}
+.sidebar .sidebar-body .sidebar-li.showMenu .sub-menu{
+    display: block;
+}
+
+
+.sidebar .sidebar-body .sidebar-li .sub-menu li{
+    position: relative;
+    list-style: none;
+    background-color: #0f171e;
+    transition: all 0.4s ease;
+}
+
+.sidebar .sidebar-body .sub-menu a{
+    color: #E8EEEE;
+    font-size: 15px;
+    padding: 0px 0;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+.sidebar .sidebar-body .sidebar-li .sub-menu a:hover{
+    color: #7cb6ea;
+}
+.sidebar.close .sidebar-body .sub-menu{
+    position: absolute;
+    left: 100%;
+    top: -10px;
+    margin-top: 0;
+    padding: 10px 20px;
+    border-radius: 0 6px 6px 0;
+    opacity: 0;
+    display: block;
+    pointer-events: none;
+    transition: 0s;
+}
+.sidebar.close .sidebar-body li:hover .sub-menu{
+  top: 0;
+  opacity: 1;
+  pointer-events: auto;
+  transition: all 0.4s ease;
+}
+
+
+/* Home Section */
+
+.home-section{
+    position: relative;
+    background: #f7fbfa;
+    height: 100vh;
+    left: 250px;
+    width: calc(100% - 250px);
+    transition: all 0.6s ease;
+}
+.sidebar.close ~ .home-section{
+    left: 78px;
+    width: calc(100% - 78px);
+}
+
+
+
+
+@media (max-width: 400px) {
+  .sidebar.close .sidebar-body li .sub-menu{
+    display: none;
+  }
+  .sidebar{
+    width: 78px;
+  }
+  .sidebar.close{
+    width: 0;
+  }
+  .home-section{
+    left: 78px;
+    width: calc(100% - 78px);
+    z-index: 100;
+  }
+  .sidebar.close ~ .home-section{
+    width: 100%;
+    left: 0;
+  }
+}

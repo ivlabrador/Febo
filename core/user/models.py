@@ -5,7 +5,8 @@ from django.forms import model_to_dict
 # Create your models here.
 
 class User(AbstractUser):
-    image = models.ImageField(upload_to='users/%d/%m/%Y', null=True, blank=True)
+    image = models.ImageField(upload_to='users/%Y/%m/%d', null=True, blank=True)
+    token = models.UUIDField(primary_key=False, editable=False, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
 

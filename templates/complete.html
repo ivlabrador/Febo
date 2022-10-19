@@ -4,39 +4,44 @@
 {% endblock %}
 
     {% block body %}
-    <!-- Header -->
-    {% include 'header.html' %}
-    <div class="container-fluid">
-        <div class="row">
+
+
+    <div class="all-content">
+
             <!-- SideBar -->
-            {% include 'sidebar.html' %}
+            {% include 'sidebar-collapse.html' %}
             <!-- Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between">
-                    {% block contentheader %}
-                    <!-- Irán los H3 de cada template -->
-                    <h3>{{title}}</h3>
-                    {% endblock %}
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ list_url }}">{{ entity }}</a></li>
-                    </ol>
+            <section class="home-section">
+                <div class="home-header">
+                     <!-- Header -->
+                    {% include 'header.html' %}
                 </div>
-                <hr id="hr_cabecera">
-                <!-- Dashboard -->
-                <div class="content">
-                    {% block content %}
+                <div class="container-content">
+                    <div class="home-content">
+                        {% block contentheader %}
+                        <h5>{{title}}</h5>
+                        {% endblock %}
+                        <ol class="breadcrumb" id="my-breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ list_url }}">{{ entity }}</a></li>
+                        </ol>
+                    </div>
+                    <div class="content">
+                        {% block content %}
 
-                    {% endblock %}
+                        {% endblock %}
+                    </div>
                 </div>
-            </main>
-        </div>
+                <!-- Footer -->
+                {% block footer %}
 
-        <!-- Footer -->
-        {% block footer %}
+                {% endblock %}
+            </section>
 
-        {% endblock %}
+
     </div>
+
+    <script type="text/javascript" src="{% static 'js/sidebar.js' %}"></script>
     <!-- Block javascript -->
 {% block javascript %}
 

@@ -1,11 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .forms import CategoryForm, ProductForm
 from .models import Category, Product
 from config.permission import ValidatePermission
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 # Categories
@@ -29,7 +28,6 @@ class CreateCategory(ValidatePermission, CreateView):
                 form = self.get_form()
                 if form.is_valid():
                     data = form.save()
-                    return redirect(self.url_redirect)
                 else:
                     data['error'] = form.errors
             else:
@@ -37,6 +35,7 @@ class CreateCategory(ValidatePermission, CreateView):
 
         except Exception as e:
             data['error'] = str(e)
+
         return JsonResponse(data)
 
 
@@ -94,7 +93,6 @@ class UpdateCategory(ValidatePermission, UpdateView):
             if action == 'edit':
                 form = self.get_form()
                 data = form.save()
-                return redirect(self.success_url)
             else:
                 messages.warning(request, f'Error al editar la categoria')
                 return redirect(self.success_url)
@@ -138,7 +136,6 @@ class DeleteCategory(ValidatePermission, DeleteView):
         context['list_url'] = self.success_url
         return context
 
-
 # Create your views here.
 class CreateProduct(ValidatePermission, CreateView):
     model = Product
@@ -156,7 +153,6 @@ class CreateProduct(ValidatePermission, CreateView):
                 form = self.get_form()
                 if form.is_valid():
                     data = form.save()
-                    return redirect(self.url_redirect)
                 else:
                     data['error'] = form.errors
             else:
@@ -173,7 +169,6 @@ class CreateProduct(ValidatePermission, CreateView):
         context['list_url'] = self.success_url
         context['action'] = 'add'
         return context
-
 
 # List Product
 class ListProduct(ValidatePermission, ListView):
@@ -219,7 +214,6 @@ class UpdateProduct(ValidatePermission, UpdateView):
             if action == 'edit':
                 form = self.get_form()
                 data = form.save()
-                return redirect(self.success_url)
             else:
                 messages.warning(request, f'Error al editar el producto')
                 return redirect(self.success_url)
@@ -235,6 +229,7 @@ class UpdateProduct(ValidatePermission, UpdateView):
         context['action'] = 'edit'
 
         return context
+
 # Delete Product
 class DeleteProduct(ValidatePermission, DeleteView):
     model = Product
@@ -262,5 +257,3 @@ class DeleteProduct(ValidatePermission, DeleteView):
         context['list_url'] = self.success_url
 
         return context
-
-

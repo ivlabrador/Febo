@@ -154,7 +154,7 @@ class UpdateUser(ValidatePermission, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Agregar un usuario'
+        context['title'] = 'Editar un usuario'
         context['entity'] = 'Usuarios'
         context['list_url'] = self.success_url
         context['action'] = 'edit'

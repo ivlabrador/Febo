@@ -29,12 +29,14 @@
         <script type="application/javascript">
                 $('#add-user-form').on('submit', function(e){
                     e.preventDefault();
-                    var parameters = $(this).serializeArray();
+                    var parameters = new FormData(this);
                     $.ajax({
                         url: window.location.pathname,
                         type: 'POST',
                         data: parameters,
-                        dataType: 'json'
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
                     }).done(function(data){
                         if(!data.hasOwnProperty('error')){
                             location.href = '{{ list_url }}';

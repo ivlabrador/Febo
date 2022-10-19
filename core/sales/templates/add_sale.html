@@ -1,5 +1,18 @@
-{% extends 'complete.html' %}
+{% extends 'list.html' %}
 {% load static %}
+{% block head_list %}
+<!-- Select2 Para iniciar busquedas-->
+<link href="{% static 'lib/select2-4.1.0/dist/css/select2.css' %}" rel="stylesheet"/>
+<script src="{% static 'lib/select2-4.1.0/dist/js/select2.min.js' %}"></script>
+<!-- Select2 Para iniciar busquedas -->
+<link href="{% static 'lib/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.css' %}" rel="stylesheet"/>
+<script src="{% static 'lib/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.js' %}"></script>
+<!-- Mi JS -->
+<script type="text/javascript" charset="utf8" src="{% static 'js/sales/saleform.js' %}"></script>
+<!-- My css -->
+<link rel="stylesheet" href="{% static 'css/formsale-style.css' %}">
+{% endblock %}
+
 {% block content %}
     {% if messages %}
         {% for message in messages %}
@@ -11,71 +24,67 @@
             </div>
         {% endfor %}
     {% endif %}
-    <form id="frmSale" method="post" data-url="{{ list_url }}">
-        <div class="card">
-            <div class="card-body">
-                <div class="container-fluid">
+    <form id="add-sale-form" method="post" data-url="{{ list_url }}">
+        <div class="sale">
+            <div class="sale-body">
                     <div class="row">
                         <div class="col-lg-8">
-                            <div class="card">
-                                <div class="">
-                                    <h3 class="card-title">
-                                        <b><i class="fas fa-boxes"></i> Detalle de productos</b>
-                                    </h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="container-fluid">
-                                        <hr>
-                                        <!-- Button modal add -->
-                                        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                          + Agregar item
-                                        </button>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="staticBackdropLabel">Agregar item</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        {% csrf_token %}
-                                                        <form action="{{ additem }}" method="POST">
-                                                        {{ ItemForm.as_p }}
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" value={{ItemForm.toJSON}} class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
-                                                        <button type="button" class="btn btn-outline-dark">Cerrar</button>
-                                                    </div>
+                            <div class="card" id="card-1" style="width: 100%">
+                                <div class="card-sale-body" id="card-body-1">
+                                    <div class="container-sale" id="container-fluid">
+                                        <div class="search-group" id="search-group">
+                                            <label>Buscador de productos:</label>
+                                            <div class="input-group" id="input-group">
+                                                <select class="search_product  select2" id="search_product" style="height: 50px;"></select>
+                                                <div class="" id="button-search">
+                                                    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class='bx bxs-color'></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item btnSearchProducts">
+                                                                <i class="fas fa-search"></i> Buscar productos
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item btnClearSearch">
+                                                                <i class="fas fa-times"></i> Limpiar búsqueda
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item btnRemoveAll">
+                                                                <i class="fas fa-trash"></i> Eliminar todos mis items
+                                                            </a>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>
-                                        <table class="table table-bordered" id="tblProducts">
+                                        <div id="table-group">
+                                            <table class="table table-bordered" id="dataSale" style="width: 100%;">
                                             <thead>
                                             <tr>
                                                 <th>Eliminar</th>
                                                 <th>Producto</th>
                                                 <th>Stock</th>
-                                                <th>Precio Unitario</th>
+                                                <th>Precio</th>
                                                 <th>Cantidad</th>
+                                                <th>Descuento</th>
+                                                <th>IVA</th>
                                                 <th>Subtotal</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             </tbody>
                                         </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title"><b><i class="fas fa-shopping-cart"></i> Datos de la factura</b></h3>
-                                </div>
-                                <div class="card-body">
+                            <div class="card" id="card-2">
+                                <div class="card-sale-2">
                                     <div class="container-fluid">
                                         <input type="hidden" name="action" value="{{ action }}">
                                         <div class="form-group">
@@ -84,51 +93,66 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Cliente:</label>
-                                            <div class="input-group">
-                                                {{ form.client }}
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-success btn-flat btnAddClient" type="button">
+                                            <div class="input-group" id="input-group-2">
+                                                <div class="input-group-append" id="input-group-2-sub">
+                                                    <select class="form-control select2" id="search_client" style="width: 210px;"></select>
+                                                    <button class="btn btnAddClient" type="button">
                                                         <i class="fas fa-user-plus"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label>Factura tipo:</label>
+                                            <label>Punto de venta</label>
+                                            {{ form.sale_point }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Factura tipo</label>
                                             {{ form.sale_type }}
                                         </div>
                                         <div class="form-group">
-                                            <label>Factura N°:</label>
+                                            <label>Factura N°</label>
                                             {{ form.sale_num }}
                                         </div>
                                         <div class="form-group">
-                                            <label>Subtotal:</label>
+                                            <label>Condición de pago</label>
+                                            {{ form.pay_condition }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Tipo de pago</label>
+                                            {{ form.pay_type }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Subtotal</label>
                                             {{ form.subtotal }}
                                         </div>
                                         <div class="form-group">
-                                            <label>IVA:</label>
-                                            {{ form.iva }}
+                                            <label>Total descuento</label>
+                                            {{ form.total_discount }}
                                         </div>
                                         <div class="form-group">
-                                            <label>IVA Calculado:</label>
-                                            <input type="text" class="form-control" readonly name="ivacalc" value="0.00">
+                                            <label>Total IVA</label>
+                                            {{ form.total_iva }}
                                         </div>
                                         <div class="form-group">
                                             <label>Total a pagar:</label>
                                             {{ form.total }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Pagado?</label>
+                                            {{ form.is_pay }}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
-            <div class="card-footer">
-                <button type="submit" class="btn btn-primary btn-flat">
+            <div class="sale-footer">
+                <button type="submit" class="btn btn-dark">
                     <i class="fas fa-save"></i> Guardar registro
                 </button>
-                <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                <a href="{{ list_url }}" class="btn btn-dark">
                     <i class="fas fa-times"></i> Cancelar
                 </a>
             </div>
@@ -136,7 +160,7 @@
     </form>
 
     <!-- Modal -->
-<!--
+
     <div class="modal fade" id="myModalClient" tabindex="-1" role="dialog" aria-hidden="true">
         <form id="frmClient" enctype="multipart/form-data" method="post">
             <div class="modal-dialog" role="document">
@@ -167,7 +191,7 @@
             </div>
         </form>
     </div>
-     -->
+
     <div class="modal fade" id="myModalSearchProducts" tabindex="-1" role="dialog"
          aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -198,10 +222,10 @@
             </div>
         </div>
     </div>
-
-    <script>
+     <!-- Edit Script -->
+    <script type="text/javascript">
         sale.details.products = {{ products|safe }};
-        // Se removio el vents.list(); para calcular bien el iva en el editar. Revisar al final del archivo form.js se lo puso.
     </script>
+
 
 {% endblock %}

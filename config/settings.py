@@ -50,6 +50,7 @@ LOCAL_APPS = [
     'core.provider',
     'core.stock',
     'core.sales',
+    'core.purchase',
     'core.sql_django',
     'core.api',
 ]
@@ -170,9 +171,13 @@ IVA_CONDITION = (
 
 # IVA OPTIONS // # Days
 PAY_CONDITION = (
+    ("0", "0"),
+    ("7", "7"),
+    ("15", "15"),
     ("30", "30"),
     ("60", "60"),
     ("90", "90"),
+    ("120", "120"),
 )
 
 #Sale Type
@@ -182,5 +187,26 @@ SALE_TYPE = (
     ("C", "C"),
 )
 
-# TIME
-#DATE_INPUT_FORMATS = '%d-%m-%Y'
+# Tipo de pagos
+PAY_TYPE = (
+    ("Cheque", "Cheque"),
+    ("Transferencia", "Transferencia"),
+    ("Efectivo", "Efectivo"),
+    ("Otro", "Otro"),
+)
+
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
+# Email configuration
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'febo.auth@gmail.com'
+EMAIL_HOST_PASSWORD = 'ruwjzicwvbpsfaki'
+
+# System settings
+
+DOMAIN = ''
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None

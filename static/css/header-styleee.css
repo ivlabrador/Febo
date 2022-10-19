@@ -1,0 +1,56 @@
+/*  Header  */
+#navbar-header{
+  top: 0;
+  left: 0;
+  height: 55px;
+  background-color: #fff;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  padding: 20px;
+  transition: all 0.4s ease;
+  box-shadow: 0 2px 4px #E4E9F7;
+}
+
+#navbar-header .nav-content{
+  height: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+/*  Header  */
+#session{
+    color: #919393;
+    transition: all 0.4s ease;
+}
+#session:hover{
+    color: #7cb6ea;
+}
+
+#login-session{
+    background: #0f171e;
+}
+
+#login-session li{
+    transition: all 0.4s ease;
+}
+
+#login-session li:hover{
+    background-color: #38536b;
+}
+
+
+#login-session li a{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #E8EEEE;
+    font-size: 16px;
+    font-weight: 400;
+    left: 15px;
+    align-items: center;
+}
+#login-session li a svg{
+    margin-right: 15px;
+}

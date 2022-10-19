@@ -12,15 +12,6 @@ def calculate_stock(stock, quantity_in):
     except Exception as e:
         data['error'] = str(e)
 
-def get_lot_id():
-    try:
-        lot = Lot.objects.last()
-        lot_id = int(lot.id)
-        lot_number = lot_id + 1
-        return str(lot_number)
-    except:
-        return "1"
-
 
 # Get total:
 def get_total(price, quantity, product_id):
@@ -35,3 +26,11 @@ def get_total(price, quantity, product_id):
         return total
     except Exception as e:
         print(str(e))
+
+
+# Boolean returns ON and OF and I need to returns True or False
+def is_boolean(condition):
+    if condition == 'on':
+        return True
+    else:
+        return False

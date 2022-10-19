@@ -12,28 +12,60 @@
         {% endfor %}
     {% endif %}
     <div class="form-content">
-        <div class="form">
-            <form id='add-product-form' method="POST" action="">
+        <div class="form-product">
+            <form id='add-product-form' class="row g-3" method="POST" action="">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="{{action}}">
-                {% for field in form %}
-                <div class="mb-3">
-                    <label for="{{field.name}}" class="form-label">{{field.label}}</label>
-                    {{field}}
+                <div class="col-md-6">
+                    <label for="{{form.name.label}}" class="form-label">{{form.name.label}}</label>
+                    {{form.name}}
                 </div>
-                {% endfor %}
-                <br>
-                <input type="submit" value="Agregar producto">
+                <div class="col-md-3">
+                    <label for="{{form.brand.label}}" class="form-label">{{form.brand.label}}</label>
+                    {{form.brand}}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{form.model.label}}" class="form-label">{{form.model.label}}</label>
+                    {{form.model}}
+                </div>
+                <div class="col-md-1">
+                    <label for="{{form.iva.label}}" class="form-label">{{form.iva.label}}</label>
+                    {{form.iva}}
+                </div>
+
+                <div class="col-md-11">
+                    <label for="{{form.image.label}}" class="form-label">{{form.image.label}}</label>
+                    {{form.image}}
+                </div>
+                <div class="col-md-12">
+                    <label for="{{form.category.label}}" class="form-label">{{form.category.label}}</label>
+                    {{form.category}}
+                </div>
+                <div class="col-md-12">
+                    <label for="{{form.description.label}}" class="form-label">{{form.description.label}}</label>
+                    {{form.description}}
+                </div>
+                <div class="col-md-12">
+                    <label for="{{form.is_active.label}}" class="form-label">{{form.is_active.label}}</label>
+                    {{form.is_active}}
+                </div>
             </form>
-            <script type="application/javascript">
-                $('#add-category-form').on('submit', function(e){
+
+        </div>
+        <input type="submit" class="btn" form="add-product-form" value="Agregar producto">
+        <script type="application/javascript">
+                $('#add-product-form').on('submit', function(e){
                     e.preventDefault();
-                    var parameters = $(this).serializeArray();
+                    // var parameters = $(this).serializeArray();
+                    var parameters = new FormData(this);
+
                     $.ajax({
                         url: window.location.pathname,
                         type: 'POST',
                         data: parameters,
-                        dataType: 'json'
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
                     }).done(function(data){
                         if(!data.hasOwnProperty('error')){
                             location.href = '{{ list_url }}';
@@ -43,8 +75,7 @@
                     }).always(function(data){
                     });
                 });
-                </script>
-        </div>
+        </script>
     </div>
 
 {% endblock %}

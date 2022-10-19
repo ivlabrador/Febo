@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ sale.sale_point.number }} - {{ sale.sale_num }}</title>
+    <style>
+    .clearfix:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    a {
+      color: #5D6975;
+      text-decoration: underline;
+    }
+    body {
+      position: relative;
+      margin: 0 auto;
+      color: #001028;
+      background: #FFFFFF;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      font-family: Arial;
+    }
+    header {
+      padding: 10px 0;
+      margin-bottom: 30px;
+    }
+
+    #logo {
+      text-align: center;
+      margin-bottom: 10px;
+      width: 60px;
+      height: 40px;
+    }
+    #logo img {
+      width: 100%;
+    }
+  h1 {
+    border-top: 1px solid  #5D6975;
+    border-bottom: 1px solid  #5D6975;
+    color: #5D6975;
+    font-size: 2.4em;
+    line-height: 1.4em;
+    font-weight: normal;
+    text-align: center;
+    margin: 0 0 20px 0;
+    background: url(dimension.png);
+  }
+
+#project {
+  float: left;
+}
+
+#project span {
+  color: #5D6975;
+  text-align: right;
+  width: 52px;
+  margin-right: 10px;
+  display: inline-block;
+  font-size: 0.8em;
+}
+
+#company {
+  float: right;
+  text-align: right;
+}
+
+#project div,
+#company div {
+  white-space: nowrap;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;
+}
+
+table tr:nth-child(2n-1) td {
+  background: #F5F5F5;
+}
+
+table th,
+table td {
+  text-align: center;
+}
+
+table th {
+  padding: 5px 20px;
+  color: #5D6975;
+  border-bottom: 1px solid #C1CED9;
+  white-space: nowrap;
+  font-weight: normal;
+}
+
+table .service,
+table .desc {
+  text-align: left;
+}
+
+table td {
+  padding: 20px;
+  text-align: right;
+}
+
+table td .head {
+  vertical-align: top;
+}
+
+table td .item {
+  font-size: 1.2em;
+}
+
+table td.grand {
+  border-top: 1px solid #5D6975;;
+}
+.first {
+  border-top: 1px solid #5D6975;;
+}
+
+#notices .notice {
+  color: #5D6975;
+  font-size: 1.2em;
+}
+
+footer {
+  color: #5D6975;
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #C1CED9;
+  padding: 8px 0;
+  text-align: center;
+}
+    </style>
+  </head>
+  <body>
+    <header class="clearfix">
+      <div class="logo">
+        <img alt="" src="media/febo.png" class="img-fluid d-block mx-auto img-logo">
+      </div>
+
+      <h1>FACTURA - {{ sale.sale_type }}</h1>
+      <div id="company" class="clearfix">
+        <div><b>{{ sale.company.name }}</b></div>
+        <div><span>Punto de Venta: </span>{{ sale.sale_point.number }}</div>
+        <div><span>Comprobante N°: </span>{{ sale.sale_num }}</div>
+        <div><span>Domicilio: </span>{{ sale.sale_point.address }}</div>
+        <div><span>Fecha de Emisión: </span>{{ sale.date_sale }}</div>
+        <div><span>CUIT: </span>{{ sale.company.fiscal_number }}</div>
+        <div><span>Teléfono: </span>{{ sale.company.phone_number  }}</div>
+        <div><span>Email: </span><a href="mailto:{{ sale.company.email }}">{{ sale.company.email }}</a></div>
+        <div><span>Condición frente a IVA: </span>Responsable Inscripto</div>
+      </div>
+      <div id="project">
+        <div><span>Razón Social</span>{{ sale.client.name }}</div>
+        <div><span>CUIT: </span>{{ sale.client.fiscal_number }}</div>
+        <div><span>Domicilio: </span>{{ sale.client.address }}, {{ sale.client.city }}</div>
+        <div><span>Teléfono: </span>{{ sale.client.phone_number  }}</div>
+        <div><span>Email: </span><a href="mailto:{{ sale.client.email }}">{{ sale.client.email }}</a></div>
+        <div><span>IVA: </span>{{ sale.client.iva_condition }}</div>
+      </div>
+    </header>
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th class="head">Producto / Servicio</th>
+            <th class="head">Descripción</th>
+            <th class="head">Precio U.</th>
+            <th class="head">IVA</th>
+            <th class="head">Cantidad</th>
+            <th class="head">Descuento</th>
+            <th class="head">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in sale.saleproduct_set.all %}
+          <tr>
+            <td class="item">{{ item.product.name }}</td>
+            <td class="item">{{ item.product.description }}</td>
+            <td class="item">% {{ item.product.iva }}</td>
+            <td class="item">$ {{ item.price }}</td>
+            <td class="item">{{ item.quantity }}</td>
+            <td class="item">% {{ item.discount }}</td>
+            <td class="item">$ {{ item.subtotal }}</td>
+          </tr>
+          {% endfor %}
+          <tr class="first">
+            <td colspan="6"><b>Subtotal</b></td>
+            <td class="sub">$ {{ sale.subtotal }}</td>
+          </tr>
+          <tr>
+            <td colspan="6"><b>Total IVA</b></td>
+            <td class="sub">$ {{ sale.total_iva }}</td>
+          </tr>
+          <tr>
+            <td colspan="6"><b>Total Descuento</b></td>
+            <td class="sub">$ {{ sale.total_discount }}</td>
+          </tr>
+          <tr>
+            <td colspan="6" class="grand total"><b>TOTAL</b></td>
+            <td class="grand total">$ {{ sale.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="notices">
+        <div>NOTICE:</div>
+        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+      </div>
+    </main>
+    <footer>
+      Invoice was created on a computer and is valid without the signature and seal.
+    </footer>
+  </body>
+</html>

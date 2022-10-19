@@ -3,5 +3,6 @@ $(function() {
     $('#data').DataTable({
         responsive: true,
         autowidth: false,
+        dateFormat: 'sort',
     });
 });

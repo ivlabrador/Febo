@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm, CheckboxInput
+from django.forms import ModelForm
 from .models import Category, Product
 
 class CategoryForm(ModelForm):
@@ -41,7 +41,7 @@ class ProductForm(ModelForm):
             'brand': forms.TextInput(attrs={'class': 'form-control'}),
             'model': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.SelectMultiple(attrs={'class': 'form-select', 'multiple': 'true'}),
-            'iva': forms.Select(attrs={'class': 'form-select-sm'}),
+            'iva': forms.Select(attrs={'class': 'form-select', 'type': 'text'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),

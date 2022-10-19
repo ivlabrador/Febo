@@ -1,0 +1,60 @@
+/* Cont-Style */
+/* Home Header */
+.home-section .home-header{
+    min-height: 40px;
+    max-height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.home-section .home-header .side{
+    font-size: 30px;
+    color: #919393;
+    transition: all 0.4s ease;
+}
+
+.home-section .home-header .side:hover{
+    cursor: pointer;
+    color: #7cb6ea;
+}
+
+/* Home Content */
+
+.home-section .container-content{
+    padding: 10px 30px;
+}
+
+.home-section .container-content .home-content{
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home-section .container-content .home-content h5{
+    color: #919393;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}
+.home-section .container-content .home-content ol{
+    margin-top: 7px;
+    float: right;
+    align-items: center;
+}
+.home-section .container-content .home-content li a{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    text-decoration: none;
+}
+#my-breadcrumb .breadcrumb-item+.breadcrumb-item::before {
+    float: left;
+    padding-right: 0.5rem;
+    color: #919393;
+    content: var(--bs-breadcrumb-divider, ">");
+}
+
+/* Content */
+.home-section .container-content .content{
+
+}

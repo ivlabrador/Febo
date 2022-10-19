@@ -3,8 +3,8 @@ from .models import Lot, Stock
 
 
 class LotAdmin(admin.ModelAdmin):
-    search_fields = ['product', 'charger']
-    list_display = ['product', 'quantity', 'price', 'charger']
+    search_fields = ['charger', ]
+    list_display = ['charger', ]
     list_filter = ['charger', ]
 
 class StockAdmin(admin.ModelAdmin):

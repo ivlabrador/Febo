@@ -1,0 +1,147 @@
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/sidebar-styleee.css' %}" type="text/css">
+<link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+{% endblock %}
+<div id="sidebarMenu" class="sidebar">
+    <div class="logo">
+        <i class='bx bxs-face-mask'></i>
+        <span class="logo-name">Febo V.1.0.1</span>
+    </div>
+    <ul class="sidebar-body">
+        <li class="sidebar-li">
+            <a href="{% url 'dashboard' %}">
+                <i class='bx bx-desktop'></i>
+                <span class="item-name">Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bxs-briefcase-alt-2'></i>
+                    <span class="item-name">Compañía</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="#"><i class='bx bx-info-circle'></i>Info</a></li>
+                <li><a href="{% url 'add-company' %}"><i class='bx bx-plus'></i>Agregar</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bx-layer'></i>
+                    <span class="item-name">Categorías</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="{% url 'add-category' %}"><i class='bx bx-plus'></i> Agregar</a></li>
+                <li><a href="{% url 'list-category' %}"><i class='bx bx-list-ul'></i> Listar</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bx-cube-alt'></i>
+                    <span class="item-name">Productos</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="{% url 'add-product' %}"><i class='bx bx-plus'></i> Agregar</a></li>
+                <li><a href="{% url 'list-product' %}"><i class='bx bx-list-ul'></i> Listar</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bxs-component'></i>
+                    <span class="item-name">Stock</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="{% url 'add-lot' %}"><i class='bx bx-plus'></i> Agregar</a></li>
+                <li><a href="{% url 'list-lot' %}"><i class='bx bx-list-ul'></i> Lotes</a></li>
+                <li><a href="{% url 'list-stock' %}"><i class='bx bx-candles'></i> Stock</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bx-cart-download' ></i>
+                    <span class="item-name">Compras</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="#"><i class='bx bx-plus'></i> Agregar</a></li>
+                <li><a href="{% url 'list-purchase' %}"><i class='bx bx-list-ul'></i> Listar</a></li>
+                <li><a href="{% url 'report-purchase' %}"><i class='bx bxs-report'></i> Reporte</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bx-trending-up'></i>
+                    <span class="item-name">Ventas</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="{% url 'add-sale-point' %}"><i class='bx bx-map-pin'></i> Punto de Venta</a></li>
+                <li><a href="{% url 'add-sale' %}"><i class='bx bx-plus'></i> Agregar</a></li>
+                <li><a href="{% url 'list-sale' %}"><i class='bx bx-list-ul'></i> Listar</a></li>
+                <li><a href="{% url 'report-sale' %}"><i class='bx bxs-report'></i> Reporte</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bxs-contact'></i>
+                    <span class="item-name">Clientes</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="{% url 'add-client' %}"><i class='bx bx-plus'></i> Agregar</a></li>
+                <li><a href="{% url 'list-client' %}"><i class='bx bx-list-ul'></i> Listar</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bxs-truck'></i>
+                    <span class="item-name">Proveedores</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="{% url 'add-provider' %}"><i class='bx bx-plus'></i> Agregar</a></li>
+                <li><a href="{% url 'list-provider' %}"><i class='bx bx-list-ul'></i> Listar</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-li">
+            <div class="dropdown-links">
+                <a href="#">
+                    <i class='bx bx-group'></i>
+                    <span class="item-name">Usuarios</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow'></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a href="{% url 'add-user' %}"><i class='bx bx-plus'></i> Agregar</a></li>
+                <li><a href="{% url 'list-user' %}"><i class='bx bx-list-ul'></i> Listar</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+{% block javascript %}
+
+<script>
+
+</script>
+{% endblock %}

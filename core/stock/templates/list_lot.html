@@ -8,11 +8,11 @@
     <tr>
         <th scope="col" style="width: 5%;">Nro</th>
         <th scope="col" style="width: 10%;">Fecha</th>
-        <th scope="col" style="width: 20%;">Product</th>
         <th scope="col" style="width: 20%;">Proveedor</th>
-        <th scope="col" style="width: 5%;">Precio U.</th>
-        <th scope="col" style="width: 5%;">Cantidad</th>
-        <th scope="col" style="width: 5%;">Total</th>
+        <th scope="col" style="width: 10%;">Subtotal</th>
+        <th scope="col" style="width: 5%;">IVA</th>
+        <th scope="col" style="width: 10%;">Descuento</th>
+        <th scope="col" style="width: 10%;">Total</th>
         <th scope="col" style="width: 5%;">Condición</th>
         <th scope="col" style="width: 5%;">¿Pagado?</th>
         <th scope="col" style="width: 20%;">Opciones</th>
@@ -24,13 +24,19 @@
     <tr>
         <td>{{ lot.id }}</td>
         <td>{{ lot.lot_date }}</td>
-        <td>{{ lot.product }}</td>
         <td>{{ lot.provider }}</td>
-        <td>${{ lot.price }}</td>
-        <td>{{ lot.quantity }}</td>
+        <td>${{ lot.subtotal }}</td>
+        <td>${{ lot.total_iva }}</td>
+        <td>${{ lot.total_discount }}</td>
         <td>${{ lot.total }}</td>
         <td>{{ lot.pay_condition }} días</td>
-        <td>{{ lot.is_pay }}</td>
+        <td>
+            {% if lot.is_pay %}
+                Si
+            {% else %}
+                No
+            {% endif %}
+        </td>
         <td>
             <!-- Update Button ver manera de hacerlo global-->
             <a type="button" class="btn" href="{% url 'update-lot' pk=lot.id %}"><i class="fa-solid fa-marker"></i></a>
@@ -45,8 +51,8 @@
                             <h5 class="modal-title" id="exampleModalLabel">¿Seguro que desea eliminar este lote?</h5>
                         </div>
                         <div class="modal-body">
-                            Al eliminar un lote, se borrarán automáticamente todos sus datos de stock<br>
-                            Stock: <b>{{lot.name}}</b>
+                            Al eliminar un lote, se borrarán los datos relacionados con el Stock y su factura de compra<br>
+                            Lote N°: <b>{{lot.id}}</b>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
@@ -62,7 +68,7 @@
     </tr>
     {% empty %}
     <tr>
-        <td colspan="8" class="text-center">No se encuentran registros de lotes</td>
+        <td colspan="10" class="text-center">No se encuentran registros de lotes</td>
     </tr>
     {% endfor %}
 {% endblock %}
