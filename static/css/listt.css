@@ -1,0 +1,59 @@
+/* List Style */
+.table-body{
+    padding: 0px 10px;
+}
+
+.container-fluid{
+    border: 1px solid #e9eded;
+    padding: 20px;
+    background: #fff;
+    transition: all 0.4s ease;
+    box-shadow: 1px 0px 7px #E4E9F7;
+    border-radius: 7px;
+    margin-bottom: 5px;
+}
+
+#data{
+    margin-top: 10px;
+    width: 100%;
+}
+
+#data tr{
+    text-decoration: none;
+}
+.dataTables_wrapper .dataTables_paginate{
+    transition: all 0.4s ease;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button{
+    padding: 1px;
+    background-color: #f7f8fb;
+}
+
+.page-item.active .page-link{
+    background-color: #74abdd;
+    color: #E8EEEE;
+}
+
+#data_length{
+    width: 500px;
+    display: flex;
+}
+
+#data_length select{
+    width: 60px;
+}
+
+#data th,
+#report th{
+    font-size: 14px;
+}
+
+#report td,
+#data td{
+    font-size: 13px;
+}
+
+#report .dt-buttons button{
+    background-color: red;
+    color: red;
+}

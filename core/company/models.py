@@ -21,7 +21,7 @@ class Company(models.Model):
     def get_image(self):
         if self.image:
             return f'{settings.MEDIA_URL}{self.image}'
-        return f'{settings.STATIC_URL}img/empty.png'
+        return f'{settings.STATIC_URL}img/febo.png'
 
     def toJSON(self):
         item = model_to_dict(self)

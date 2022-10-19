@@ -6,12 +6,13 @@
 
 {% block columns %}
     <tr>
-        <th scope="col" style="width: 5%;">Nro</th>
+        <th scope="col" style="width: 2%;">Nro</th>
         <th scope="col" style="width: 20%;">Nombre</th>
         <th scope="col" style="width: 20%;">Apellido</th>
-        <th scope="col" style="width: 15%;">Username</th>
+        <th scope="col" style="width: 10%;">Username</th>
         <th scope="col" style="width: 15%;">Email</th>
-        <th scope="col" style="width: 20%;">Opciones</th>
+        <th scope="col" style="width: 15%;">Grupos</th>
+        <th scope="col" style="width: 13%;">Opciones</th>
     </tr>
 {% endblock %}
 
@@ -23,6 +24,15 @@
         <td>{{ user.last_name }}</td>
         <td>{{ user.username }}</td>
         <td>{{ user.email }}</td>
+        {% if user.groups.all|length != 0 %}
+        <td>
+            {% for g in user.groups.all %}
+                {{g.name}}
+            {% endfor %}
+        </td>
+        {% else %}
+        <td> Sin Grupo </td>
+        {% endif %}
         <td>
             <!-- Update Button ver manera de hacerlo global-->
             <a type="button" class="btn" href="{% url 'update-user' pk=user.id %}"><i class="fa-solid fa-marker"></i></a>

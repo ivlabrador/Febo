@@ -79,3 +79,10 @@ class SaleForm(ModelForm):
                 'class': 'form-control',
             })
         }
+
+# Date Range
+class ReportSaleForm(forms.Form):
+    date_ranger = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'autocomplete': 'off'
+    }))

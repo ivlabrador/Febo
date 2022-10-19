@@ -1,58 +1,53 @@
 from datetime import datetime
+from django.contrib.auth.models import Group
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, FloatField
 from django.db.models.functions import Coalesce
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import PasswordChangeForm
 from config.permission import ValidatePermission
+from core.product.models import Product
+from core.sales.models import Sale, SaleProduct
 from core.user.models import User
-from core.user.forms import UserForm, UserProfileForm
+from core.user.forms import UserForm, ProfileForm
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View, FormView
 from django.contrib import messages
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
+    current_year = datetime.now().year
 
-    #def get(self, request, *args, **kwargs):
-     #   request.user.get_group_session()
-      #  return super().get(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        request.user.get_group_session()
+        return super().get(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['panel'] = 'Panel de administrador'
-        context['title'] = 'Dashboard'
-        return context
-"""
     def post(self, request, *args, **kwargs):
         data = {}
         try:
             action = request.POST['action']
             if action == 'get_graph_sales_year_month':
                 points = []
-                year = datetime.now().year
+                year = self.current_year
                 for m in range(1, 13):
-                    total = Sale.objects.filter(date_joined__year=year, date_joined__month=m).aggregate(result=Coalesce(Sum('total'), 0.00, output_field=FloatField())).get('result')
+                    total = Sale.objects.filter(date_sale__year=year, date_sale__month=m).aggregate(result=Coalesce(Sum('total'), 0.00, output_field=FloatField())).get('result')
                     points.append(float(total))
                 data = {
-                    'name': 'Porcentaje de venta',
-                    'showInLegend': False,
-                    'colorByPoint': True,
                     'data': points
                 }
+                print(data)
             elif action == 'get_graph_sales_products_year_month':
                 points = []
-                year = datetime.now().year
+                year = self.current_year
                 month = datetime.now().month
                 for p in Product.objects.filter():
-                    total = SaleProduct.objects.filter(sale__date_joined__year=year, sale__date_joined__month=month, product_id=p.id).aggregate(result=Coalesce(Sum('subtotal'), 0, output_field=FloatField())).get('result')
+                    total = SaleProduct.objects.filter(sale__date_sale__year=year, sale__date_sale__month=month, product_id=p.id).aggregate(result=Coalesce(Sum('subtotal'), 0, output_field=FloatField())).get('result')
                     if total > 0:
                         points.append({'name': p.name,'y': float(total)})
                 data = {
-                    'name': 'Porcentaje',
-                    'colorByPoint': True,
                     'data': points
                 }
             else:
@@ -60,8 +55,16 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
-"""
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['panel'] = 'Panel de administrador'
+        context['title'] = 'Dashboard'
+        context['year'] = self.current_year
+        return context
+
+
+# Page not found
 def page_not_found404(request, exception):
     return render(request, '404.html')
 
@@ -144,10 +147,8 @@ class UpdateUser(ValidatePermission, UpdateView):
             if action == 'edit':
                 form = self.get_form()
                 data = form.save()
-                return redirect(self.success_url)
             else:
                 messages.warning(request, f'Error al editar el usuario')
-                return redirect(self.success_url)
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
@@ -188,11 +189,11 @@ class DeleteUser(DeleteView, ValidatePermission):
 
         return context
 
-
-class UserChangePasswordView(LoginRequiredMixin, FormView):
+# Change Password
+class UserChangePassword(LoginRequiredMixin, FormView):
     model = User
     form_class = PasswordChangeForm
-    template_name = 'user/change_password.html'
+    template_name = 'change_password.html'
     success_url = reverse_lazy('login')
 
     def get_form(self, form_class=None):
@@ -221,8 +222,53 @@ class UserChangePasswordView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Edición de Password'
+        context['title'] = 'Editar Password'
         context['entity'] = 'Password'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        return context
+
+# Select Group
+class SelectGroup(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        try:
+            request.session['group'] = Group.objects.get(pk=self.kwargs['pk'])
+        except:
+            pass
+        return HttpResponseRedirect(reverse_lazy('dashboard'))
+
+# Update Profile
+class UpdateUserProfile(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = ProfileForm
+    template_name = 'add_user.html'
+    success_url = reverse_lazy('dashboard')
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'edit':
+                form = self.get_form()
+                data = form.save()
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edición de Perfil'
+        context['entity'] = 'Perfil'
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         return context

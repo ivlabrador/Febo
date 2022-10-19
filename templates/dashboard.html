@@ -1,10 +1,9 @@
 {% extends 'complete.html' %}
 {% load static %}
 {% block head %}
-    <script src="{% static 'lib/highcharts-9.1.1/highcharts.js' %}"></script>
-    <script src="{% static 'lib/highcharts-9.1.1/modules/exporting.js' %}"></script>
-    <script src="{% static 'lib/highcharts-9.1.1/modules/export-data.js' %}"></script>
-    <script src="{% static 'lib/highcharts-9.1.1/modules/accessibility.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link type="text/css" rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<!--<script src="{% static 'js/charts.js' %}"></script> -->
 {% endblock %}
 
 {% block content %}
@@ -18,86 +17,65 @@
             </div>
         {% endfor %}
     {% endif %}
+    <div class="header-content">
+        <div id="first">
+            <canvas id="product-sale-chart"></canvas>
+        </div>
+    </div>
+    <div class="center-content">
+        <div id="sales">
+            <canvas id="sales-chart"></canvas>
+        </div>
+    </div>
 
-    <script type="application/javascript">
-        var graphcolumn = Highcharts.chart('container', {
-            chart: {
-                type: 'column'
-            },
-            title: {
-                text: 'Reporte de ventas del año 2021'
-            },
-            subtitle: {
-                text: 'Reporte de columnas'
-            },
-            xAxis: {
-                categories: [
-                    'Enero',
-                    'Febrero',
-                    'Marzo',
-                    'Abril',
-                    'Mayo',
-                    'Junio',
-                    'Julio',
-                    'Agosto',
-                    'Septiembre',
-                    'Octubre',
-                    'Noviembre',
-                    'Diciembre'
-                ],
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Valores $'
+<!-- Charts -->
+<script>
+    var ctx = $('#sales-chart');
+    var pie = $('#product-sale-chart');
+
+    var labels = [
+          'Enero',
+          'Febrero',
+          'Marzo',
+          'Abril',
+          'Mayo',
+          'Junio',
+          'Julio',
+          'Agosto',
+          'Septiembre',
+          'Octubre',
+          'Noviembre',
+          'Diciembre',
+        ];
+
+    var options = {
+            responsive: true,
+            scales: {
+                x: {
+                    type: 'category',
+                    labels: labels
                 }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} $</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-        });
-        var graphpie = Highcharts.chart('container-pie', {
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false,
-                type: 'pie'
-            },
-            title: {
-                text: 'Porcentaje de venta de productos por el mes de Junio del año 2020'
-            },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            accessibility: {
-                point: {
-                    valueSuffix: '%'
-                }
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                    }
-                }
-            },
-        });
-        var graph = {
+            }
+            };
+
+    var products = [];
+    function myProducts(lista, data){
+        data.forEach(function (k, v){
+            lista.push(k.name);
+            console.log(lista);
+            return lista;
+        })
+    };
+    var quantities = [];
+    function myValues(lista, data){
+        data.forEach(function (k, v){
+            lista.push(k.y);
+            console.log(lista);
+            return lista;
+        })
+    };
+
+    var graph = {
             getSalesYearMonth: function () {
                 $.ajax({
                     url: pathname,
@@ -111,7 +89,19 @@
                     },
                     success: function (request) {
                         if (!request.hasOwnProperty('error')) {
-                            graphcolumn.addSeries(request);
+                            var myChart = new Chart(ctx, {
+                                  type: 'line',
+                                  data: {
+                                      labels: labels,
+                                      datasets: [{
+                                        label: 'Reporte de ventas año {{year}}',
+                                        backgroundColor: 'rgb(255, 99, 132)',
+                                        borderColor: 'rgb(255, 99, 132)',
+                                        data: request.data,
+                                      }]
+                                    },
+                                  options: options,
+                                });
                             return false;
                         }
                         message_error(request.error);
@@ -134,8 +124,29 @@
                     },
                     success: function (request) {
                         if (!request.hasOwnProperty('error')) {
-                            graphpie.addSeries(request);
-                            return false;
+                            myProducts(products, request.data);
+                            myValues(quantities, request.data);
+                            var myPie = new Chart(pie, {
+                                  type: 'pie',
+                                  data: {
+                                      labels: products,
+                                      datasets: [{
+                                        label: 'Porcentaje de ventas por producto año {{year}}',
+                                        backgroundColor:  [
+                                          'rgb(255, 99, 132)',
+                                          'rgb(54, 162, 235)',
+                                          'rgb(255, 205, 86)'
+                                        ],
+                                        borderColor: 'rgb(255, 99, 132)',
+                                        data: quantities,
+                                      }]
+                                    },
+                                  options: {
+                                    responsive: true,
+                                  },
+                                });
+                                console.log(myPie.data);
+                                return false;
                         }
                         message_error(request.error);
                     },
@@ -144,12 +155,12 @@
                     }
                 });
             }
-        };
-
-        $(function () {
-            graph.getSalesYearMonth();
-            graph.getSalesProductsYearMonth();
+            };
+            $(function () {
+                graph.getSalesYearMonth();
+                graph.getSalesProductsYearMonth();
         });
-    </script>
+</script>
 {% endblock %}
+
 

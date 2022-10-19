@@ -1,3 +1,8 @@
+import smtplib
+import uuid
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from django.contrib.auth import login, logout
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
@@ -10,8 +15,8 @@ from config import settings
 from core.login.forms import ResetPasswordForm, ChangePasswordForm, AuthenticationForm
 from core.user.models import User
 
-
-class LoginFormView(FormView):
+# Log-in
+class Login(FormView):
     form_class = AuthenticationForm
     template_name = 'login.html'
     success_url = settings.LOGIN_REDIRECT_URL
@@ -23,24 +28,25 @@ class LoginFormView(FormView):
 
     def form_valid(self, form):
         login(self.request, user=form.get_user())
-        return super(LoginFormView, self).form_valid(form)
+        return super(Login, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Iniciar sesión'
         return context
 
-
-class LogoutView(RedirectView):
+# Log-out
+class Logout(RedirectView):
     pattern_name = 'login'
 
     def dispatch(self, request, *args, **kwargs):
         logout(request)
         return super().dispatch(request, *args, **kwargs)
 
-class ChangePasswordView(FormView):
+# Change password
+class ChangePassword(FormView):
     form_class = ChangePasswordForm
-    template_name = 'login/changepwd.html'
+    template_name = 'change_password.html'
     success_url = reverse_lazy(settings.LOGIN_REDIRECT_URL)
 
     @method_decorator(csrf_exempt)
@@ -74,21 +80,16 @@ class ChangePasswordView(FormView):
         context['login_url'] = settings.LOGIN_URL
         return context
 
-
-
-"""
-class ResetPasswordView(FormView):
+# Reset first password - by email
+class ResetPassword(FormView):
     form_class = ResetPasswordForm
-    template_name = 'login/resetpwd.html'
+    template_name = 'reset_password.html'
     success_url = reverse_lazy(settings.LOGIN_REDIRECT_URL)
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
-    
-    
 
-   
     def send_email_reset_pwd(self, user):
         data = {}
         try:
@@ -105,10 +106,9 @@ class ResetPasswordView(FormView):
             mensaje['From'] = settings.EMAIL_HOST_USER
             mensaje['To'] = email_to
             mensaje['Subject'] = 'Reseteo de contraseña'
-
-            content = render_to_string('login/send_email.html', {
+            content = render_to_string('reset_password_email.html', {
                 'user': user,
-                'link_resetpwd': f'http://{URL}/login/change/password/{user.token}/',
+                'link_resetpwd': f'http://{URL}/login/change-password-rst/{user.token}/',
                 'link_home': f'http://{URL}'
             })
             mensaje.attach(MIMEText(content, 'html'))
@@ -133,11 +133,5 @@ class ResetPasswordView(FormView):
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data, safe=False)
-
-    
-
-
-
-"""
 
 

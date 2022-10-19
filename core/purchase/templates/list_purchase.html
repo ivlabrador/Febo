@@ -1,0 +1,74 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 5%;">Nro</th>
+        <th scope="col" style="width: 10%;">Fecha</th>
+        <th scope="col" style="width: 20%;">Proveedor</th>
+        <th scope="col" style="width: 10%;">Subtotal</th>
+        <th scope="col" style="width: 5%;">IVA</th>
+        <th scope="col" style="width: 10%;">Descuento</th>
+        <th scope="col" style="width: 10%;">Total</th>
+        <th scope="col" style="width: 5%;">Condición</th>
+        <th scope="col" style="width: 5%;">¿Pagado?</th>
+        <th scope="col" style="width: 20%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for purchase in purchases %}
+    <tr>
+        <td>{{ purchase.id }}</td>
+        <td>{{ purchase.date }}</td>
+        <td>{{ purchase.provider }}</td>
+        <td>${{ purchase.subtotal }}</td>
+        <td>${{ purchase.total_iva }}</td>
+        <td>${{ purchase.total_discount }}</td>
+        <td>${{ purchase.total }}</td>
+        <td>{{ purchase.pay_condition }} días</td>
+        <td>
+            {% if purchase.is_pay %}
+                Si
+            {% else %}
+                No
+            {% endif %}
+        </td>
+        <td>
+            <!-- Update Button ver manera de hacerlo global-->
+            <a type="button" class="btn" href="#"><i class="fa-solid fa-marker"></i></a>
+            <!-- Delete Button ver manera de hacerlo global-->
+            <button type="button" data-bs-toggle="modal"  class="btn" data-bs-target="#delete-modal{{ lot.id }}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <div class="modal fade" id="delete-modal{{ lot.id }}" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro que desea eliminar este lote?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Al eliminar un lote, se borrarán los datos relacionados con el Stock<br>
+                            Lote N°: <b>{{purchase.id}}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
+                            <form action="#" method="POST">
+                                {% csrf_token %}
+                                <button value={{purchase.id}} name="purchase_id" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="10" class="text-center">No se encuentran registros de lotes</td>
+    </tr>
+    {% endfor %}
+{% endblock %}

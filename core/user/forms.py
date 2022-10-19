@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 from core.user.models import User
 
-
+# User Form
 class UserForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -11,7 +11,7 @@ class UserForm(ModelForm):
 
     class Meta:
         model = User
-        fields = 'first_name', 'last_name', 'email', 'username', 'password', 'image'
+        fields = 'first_name', 'last_name', 'email', 'username', 'password', 'image', 'groups'
         widgets = {
             'first_name': forms.TextInput(
                 attrs={
@@ -44,8 +44,13 @@ class UserForm(ModelForm):
                                             }
                                             ),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'groups': forms.SelectMultiple(attrs={
+                'class': 'form-control select2',
+                'style': 'width: 100%; height: 10px;',
+                'multiple': 'multiple'
+            }),
         }
-        exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff', 'groups']
+        exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff']
 
     def save(self, commit=True):
         data = {}
@@ -61,14 +66,18 @@ class UserForm(ModelForm):
                     if user.password != pwd:
                         u.set_password(pwd)
                 u.save()
+                u.groups.clear() #Limpio y guardo nuevamente
+                for g in self.cleaned_data['groups']:
+                    u.groups.add(g)
+
             else:
                 data['error'] = form.errors
         except Exception as e:
             data['error'] = str(e)
         return data
 
-
-class UserProfileForm(ModelForm):
+# Profile Form
+class ProfileForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs['autofocus'] = True

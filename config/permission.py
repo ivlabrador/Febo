@@ -35,10 +35,10 @@ class ValidatePermission(object):
             for p in perms:
                 if not group.permissions.filter(codename=p).exists():
                     messages.error(request, 'No tiene permiso para ingresar a este módulo')
-                    return HttpResponseRedirect(self.get_url_redirect())
+                    return redirect('dashboard')
             return super().get(request, *args, **kwargs)
         messages.error(request, 'No tiene permiso para ingresar a este módulo')
-        return HttpResponseRedirect(self.get_url_redirect())
+        return redirect(self.get_url_redirect())
 
 
 class ExistsCompany(object):

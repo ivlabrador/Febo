@@ -138,3 +138,6 @@ class SaleProduct(models.Model):
         verbose_name_plural = 'Detalle de Ventas'
         default_permissions = ()
         ordering = ['id']
+
+
+

@@ -1,0 +1,19 @@
+.header-content{
+    max-height: 400px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.header-content #first{
+    float:left;
+    width: 300px;
+    margin-left: 15px;
+}
+.center-content{
+    max-height: 400px;
+    width: 100%;
+}
+#sales{
+    float:left;
+    width: 700px;
+    margin-left: 15px;
+}

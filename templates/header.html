@@ -31,9 +31,14 @@
         <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a id="session" class="nav-link dropdown-toggle item" href="#" role="button" data-bs-toggle="dropdown"  aria-expanded="false"><i class="fas fa-users-cog"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-dark">
+                        <ul class="dropdown-menu dropdown-menu-dark" id="login-session">
+                            <li><p class="dropdown-item">
+                                {{ request.user.username }}
+                            </p>
+                            </li>
                             <li>
-                                <span class="dropdown-item" style="font-size: 12px;">
+
+                                <span class="dropdown-item" style="font-size: 10px;">
                                             Sú último acceso fue {{ request.user.last_login }}
                                 </span>
                             </li>

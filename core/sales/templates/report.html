@@ -1,0 +1,73 @@
+{% extends 'list.html' %}
+{% load static %}
+
+{% block head_list %}
+    <script src="{% static 'lib/moment/moment.js' %}"></script>
+    <script src="{% static 'lib/daterangepicker-master/spanish.js'%}"></script>
+    <script src="{% static 'lib/daterangepicker-master/daterangepicker.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/daterangepicker-master/daterangepicker.css' %}" >
+    <link rel="stylesheet" href="{% static 'lib/DataTables/plugings/buttons.dataTables.min.css' %}" type="text/css" >
+    <script src="{% static 'lib/DataTables/plugings/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'lib/DataTables/plugings/jszip.min.js' %}"></script>
+    <script src="{% static 'lib/DataTables/plugings/pdfmake.min.js' %}"></script>
+    <script src="{% static 'lib/DataTables/plugings/vfs_fonts.js' %}"></script>
+    <script src="{% static 'lib/DataTables/plugings/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'js/report.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{message.tags}}" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="table-content">
+        <div class="table-body">
+            <div class="container-fluid">
+                {% block content_list_before %}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <label>Rango de fechas:</label>
+                            {{form.date_ranger}}
+                        </div>
+                    </div>
+                <hr>
+                {% endblock %}
+                <table class="table table-striped" id="report" style="width:100%;">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 15%;">Nro</th>
+                        <th scope="col" style="width: 5%;">Fecha</th>
+                        <th scope="col" style="width: 5%;">Tipo</th>
+                        <th scope="col" style="width: 15%;">Cliente</th>
+                        <th scope="col" style="width: 10%;">Subtotal</th>
+                        <th scope="col" style="width: 10%;">Iva</th>
+                        <th scope="col" style="width: 10%;">Descuento</th>
+                        <th scope="col" style="width: 10%;">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="table-btn">
+            {% block buttons_list %}
+                <a href="{{ list_url }}" class="btn btn-light" id="ACT">
+                    <i class="fas fa-sync"></i> Actualizar
+                </a>
+            {% endblock %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+{% endblock %}

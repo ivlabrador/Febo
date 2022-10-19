@@ -167,21 +167,103 @@ class UpdateLot(ValidatePermission, UpdateView):
     url_redirect = success_url
     permission_required = 'change_lot'
 
+    def get_details_product(self):
+        data = []
+        lot = self.get_object()
+        for i in lot.lotproduct_set.all():
+            item = i.product.toJSON()
+            item['quantity'] = i.quantity
+            item['price'] = str(i.price)
+            item['discount'] = str(i.discount)
+            data.append(item)
+        return json.dumps(data)
+
     def post(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            form = self.get_form()
-            obj = self.get_object()
-            id = obj.id
-            if form.is_valid():
-                lot = Lot.objects.get(pk=id)
-                instance = LotForm(request.POST or None, request.FILES or None, instance=lot)
-                product = request.POST['product']
-                instance.save()
-                messages.success(request, f'Lote editado con éxito, producto: {product}')
-                return redirect(self.url_redirect)
+        data = {}
+        id_session = request.user.id
+        action = request.POST['action']
+        if action == 'search_products':
+            data = []
+            ids_exclude = json.loads(request.POST['ids'])
+            term = request.POST['term'].strip()
+            data.append({'id': term, 'text': term})
+            products = Product.objects.filter(name__icontains=term).filter(Q(is_active=True))
+            for i in products.exclude(id__in=ids_exclude)[0:10]:
+                item = i.toJSON()
+                item['text'] = i.__str__()
+                data.append(item)
+        elif action == 'edit':
+            lot = self.get_object()
+            # Eliminar Factura si es que existe y crea factura nueva
+            if lot.make_invoice:
+                purchase = Purchase.objects.filter(provider=lot.provider, buy_num=lot.buy_num, total=lot.total).get()
+                purchase.delete()
             else:
-                messages.warning(request, 'Hay errores en el formulario de edición')
-                return redirect(self.url_redirect)
+                pass
+            products = json.loads(request.POST['products'])
+            subtotal = float(request.POST['subtotal'])
+            total_discount = float(request.POST['total_discount'])
+            total_iva = float(request.POST['total_iva'])
+            total = (subtotal + total_iva - total_discount)
+            make_invoice = request.POST.get('make_invoice', 'off')
+            make_invoice = is_boolean(make_invoice)
+            is_pay = request.POST.get('is_pay', 'off')
+            is_pay = is_boolean(is_pay)
+            pdf_file = request.POST.get('payment_slip', None)
+            lot.lot_date = request.POST['lot_date']
+            lot.provider_id = int(request.POST['provider'])
+            lot.buy_num = request.POST['buy_num']
+            lot.buy_type = request.POST['buy_type']
+            lot.pay_condition = request.POST['pay_condition']
+            lot.pay_type = request.POST['pay_type']
+            lot.payment_slip = pdf_file
+            lot.subtotal = subtotal
+            lot.total_iva = total_iva
+            lot.total_discount = total_discount
+            lot.total = total
+            lot.make_invoice = make_invoice
+            lot.is_pay = is_pay
+            lot.charger_id = id_session
+            lot.save()
+            # Sacar del Stock
+            for detail in lot.lotproduct_set.all():
+                stock = Stock.objects.get(product_id=detail.product.id)
+                stock.stock -= int(detail.quantity)
+                stock.save()
+            lot.lotproduct_set.all().delete()
+            # Instanciar nuevamente todos los detalles
+            for i in products:
+                detail = LotProduct()
+                detail.lot_id = lot.pk
+                detail.product_id = int(i['id'])
+                detail.quantity = int(i['quantity'])
+                detail.price = float(i['price'])
+                detail.discount = float(i['discount'])
+                detail.subtotal = (detail.quantity * detail.price)
+                detail.save()
+        elif action == 'search_provider':
+                data = []
+                term = request.POST['term']
+                providers = Provider.objects.filter(Q(name__icontains=term) | Q(f_name__icontains=term))[0:10]
+                for i in providers:
+                    item = i.toJSON()
+                    item['text'] = i.__str__()
+                    data.append(item)
+        else:
+            data['error'] = 'No ha ingresado a ninguna opción'
+
+        return JsonResponse(data, safe=False)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Edición de lote'
+        context['entity'] = 'Lotes'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        context['products'] = self.get_details_product()
+        context['add-client-form'] = ProviderForm
+        return context
 
 # Delete Provider
 class DeleteLot(DeleteView, ValidatePermission):
@@ -223,7 +305,6 @@ class DeleteLot(DeleteView, ValidatePermission):
         context['list_url'] = self.success_url
 
         return context
-
 
 # List Stock
 class ListStock(ValidatePermission, ListView):

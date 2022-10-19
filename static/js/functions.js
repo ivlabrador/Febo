@@ -34,6 +34,54 @@ function message_error(obj) {
     });
 }
 
+function submit_ajax_lot(url, title, content, parameters, callback) {
+    $.confirm({
+        theme: 'material',
+        title: title,
+        icon: 'fa fa-info',
+        content: content,
+        columnClass: 'small',
+        typeAnimated: true,
+        cancelButtonClass: 'btn-primary',
+        draggable: true,
+        dragWindowBorder: false,
+        buttons: {
+            info: {
+                text: "Si",
+                btnClass: 'btn-primary',
+                action: function () {
+                    $.ajax({
+                        url: url,
+                        data: parameters,
+                        type: 'POST',
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        },
+                        processData: false,
+                        contentType: false,
+                        success: function (request) {
+                            if (!request.hasOwnProperty('error')) {
+                                callback(request);
+                                ;
+                                return false;
+                            }
+                        },
+                    });
+                }
+            },
+            danger: {
+                text: "No",
+                btnClass: 'btn-red',
+                action: function () {
+
+                }
+            },
+        }
+    })
+}
+
+
 function submit_with_ajax(url, title, content, parameters, callback) {
     $.confirm({
         theme: 'material',
@@ -67,9 +115,6 @@ function submit_with_ajax(url, title, content, parameters, callback) {
                             }
                             message_error(request.error);
                         },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            message_error(errorThrown + ' ' + textStatus);
-                        }
                     });
                 }
             },
@@ -85,7 +130,7 @@ function submit_with_ajax(url, title, content, parameters, callback) {
 }
 
 function alert_action(title, content, callback, cancel) {
-    $.confirm({
+    $.confirm ({
         theme: 'material',
         title: title,
         icon: 'fa fa-info',

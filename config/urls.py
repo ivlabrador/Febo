@@ -16,12 +16,12 @@ Including another URLconf
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from core.login.views import LoginFormView
+from core.login.views import Login
 from config import settings
 
 
 urlpatterns = [
-    path('', LoginFormView.as_view(), name='login'),
+    path('', Login.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path('login/', include('core.login.urls')),
     path('user/', include('core.user.urls')),
@@ -31,6 +31,7 @@ urlpatterns = [
     path('provider/', include('core.provider.urls')),
     path('stock/', include('core.stock.urls')),
     path('sales/', include('core.sales.urls')),
+    path('purchase/', include('core.purchase.urls')),
     path('api/', include('core.api.urls')),
 
 ]
