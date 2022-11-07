@@ -1,0 +1,98 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+<!-- Select2 Para iniciar busquedas-->
+<link href="{% static 'lib/select2-4.1.0/dist/css/select2.css' %}" rel="stylesheet"/>
+<script src="{% static 'lib/select2-4.1.0/dist/js/select2.min.js' %}"></script>
+<!-- Select2 Para iniciar busquedas -->
+<link href="{% static 'lib/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.css' %}" rel="stylesheet"/>
+<script src="{% static 'lib/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.js' %}"></script>
+<!-- Mi JS -->
+<script type="text/javascript" charset="utf8" src="{% static 'js/purchase/purchaseform.js' %}"></script>
+<!-- My css
+<link rel="stylesheet" href="{% static 'css/formsale-style.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="form-content">
+        <div class="form-purchase">
+            <form id='add-purchase-form' class="row g-3"  method="POST" action="" data-url="{{ list_url }}>
+                <input type="hidden" name="action" value="{{action}}">
+                <div class="col-md-6">
+                    <label>Proveedor</label>
+                    <div class="input-group" id="input-group-2">
+                        <div class="input-group-append" id="input-group-2-sub">
+                            <select class="form-control select2" id="search_provider" style="width: 210px;"></select>
+                            <button class="btn btnAddClient" type="button">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="{{form.date.label}}" class="form-label">{{form.date.label}}</label>
+                    {{form.date}}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{form.buy_num.label}}" class="form-label">{{form.buy_num.label}}</label>
+                    {{form.buy_num}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.buy_type.label}}" class="form-label">{{form.buy_type.label}}</label>
+                    {{form.buy_type}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.pay_condition.label}}" class="form-label">{{form.pay_condition.label}}</label>
+                    {{form.pay_condition}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.pay_type.label}}" class="form-label">{{form.pay_type.label}}</label>
+                    {{form.pay_type}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.subtotal.label}}" class="form-label">{{form.subtotal.label}}</label>
+                    {{form.subtotal}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.total_discount.label}}" class="form-label">{{form.total_discount.label}}</label>
+                    {{form.total_discount}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.total_iva.label}}" class="form-label">{{form.total_iva.label}}</label>
+                    {{form.total_iva}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.total.label}}" class="form-label">{{form.total.label}}</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                            {{form.total}}
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <label for="{{form.payment_slip.label}}" class="form-label">{{form.payment_slip.label}}</label>
+                    {{form.payment_slip}}
+                </div>
+                <div class="col-md-12">
+                    <label for="{{form.is_pay.label}}" class="form-label">{{form.is_pay.label}}</label>
+                    {{form.is_pay}}
+                </div>
+
+            </form>
+        </div>
+        <input type="submit" class="btn" form="add-purchase-form" value="Agregar compra">
+
+    </div>
+
+{% endblock %}

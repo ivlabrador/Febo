@@ -1,9 +1,11 @@
 .header-content{
+    display: inline-block;
     max-height: 400px;
     width: 100%;
     margin-bottom: 20px;
 }
-.header-content #first{
+.header-content #first,
+.header-content #second{
     float:left;
     width: 300px;
     margin-left: 15px;
@@ -12,8 +14,26 @@
     max-height: 400px;
     width: 100%;
 }
+
+.title{
+    color: #919393;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    text-align: center;
+    margin-bottom: 10px;
+}
 #sales{
-    float:left;
+    display: inline-block;
+    height: 400px;
     width: 700px;
     margin-left: 15px;
+}
+.graphic-container{
+    border: 1px solid #e9eded;
+    padding: 20px;
+    background-color: #fff;;
+    box-shadow: 1px 0px 7px #E4E9F7;
+    border-radius: 7px;
+    overflow: auto;
 }

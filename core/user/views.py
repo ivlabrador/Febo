@@ -12,6 +12,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from config.permission import ValidatePermission
 from core.product.models import Product
 from core.sales.models import Sale, SaleProduct
+from core.stock.models import Lot, LotProduct
 from core.user.models import User
 from core.user.forms import UserForm, ProfileForm
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View, FormView
@@ -20,6 +21,7 @@ from django.contrib import messages
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
     current_year = datetime.now().year
+    current_month = datetime.now().month
 
     def get(self, request, *args, **kwargs):
         request.user.get_group_session()
@@ -27,24 +29,31 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         data = {}
+        year = self.current_year
+        month = self.current_month
         try:
             action = request.POST['action']
             if action == 'get_graph_sales_year_month':
                 points = []
-                year = self.current_year
                 for m in range(1, 13):
                     total = Sale.objects.filter(date_sale__year=year, date_sale__month=m).aggregate(result=Coalesce(Sum('total'), 0.00, output_field=FloatField())).get('result')
                     points.append(float(total))
                 data = {
                     'data': points
                 }
-                print(data)
             elif action == 'get_graph_sales_products_year_month':
                 points = []
-                year = self.current_year
-                month = datetime.now().month
                 for p in Product.objects.filter():
                     total = SaleProduct.objects.filter(sale__date_sale__year=year, sale__date_sale__month=month, product_id=p.id).aggregate(result=Coalesce(Sum('subtotal'), 0, output_field=FloatField())).get('result')
+                    if total > 0:
+                        points.append({'name': p.name,'y': float(total)})
+                data = {
+                    'data': points
+                }
+            elif action == 'get_graph_buy_products_year_month':
+                points = []
+                for p in Product.objects.filter():
+                    total = LotProduct.objects.filter(lot__lot_date__year=year, lot__lot_date__month=month, product_id=p.id).aggregate(result=Coalesce(Sum('subtotal'), 0, output_field=FloatField())).get('result')
                     if total > 0:
                         points.append({'name': p.name,'y': float(total)})
                 data = {
@@ -61,6 +70,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['panel'] = 'Panel de administrador'
         context['title'] = 'Dashboard'
         context['year'] = self.current_year
+        context['month'] = self.current_month
         return context
 
 

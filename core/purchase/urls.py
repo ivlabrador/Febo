@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import ListPurchase, ReportPurchase
+from .views import ListPurchase, ReportPurchase, AddPurchase
 
 urlpatterns = [
     # Sales
-    #path('add-sale/', AddSale.as_view(), name='add-sale'),
+    path('add-purchase/', AddPurchase.as_view(), name='add-purchase'),
     path('list-purchase/', ListPurchase.as_view(), name='list-purchase'),
     #path('update-sale/<int:pk>', UpdateSale.as_view(), name='update-sale'),
     #path('delete-sale/<int:pk>', DeleteSale.as_view(), name='delete-sale'),

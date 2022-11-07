@@ -19,12 +19,24 @@
     {% endif %}
     <div class="header-content">
         <div id="first">
-            <canvas id="product-sale-chart"></canvas>
+            <div class="graphic-container">
+                <h6 class="title">Venta de productos mes {{month}}</h6>
+                <canvas id="product-sale-chart"></canvas>
+            </div>
+        </div>
+        <div id="second">
+            <div class="graphic-container">
+                <h6 class="title">Compra de productos mes {{month}}</h6>
+                <canvas id="product-buy-chart"></canvas>
+            </div>
         </div>
     </div>
     <div class="center-content">
         <div id="sales">
-            <canvas id="sales-chart"></canvas>
+            <div class="graphic-container">
+                <h6 class="title">Reporte de ventas año {{year}}</h6>
+                <canvas id="sales-chart"></canvas>
+            </div>
         </div>
     </div>
 
@@ -32,7 +44,7 @@
 <script>
     var ctx = $('#sales-chart');
     var pie = $('#product-sale-chart');
-
+    var pie_buy = $('#product-buy-chart');
     var labels = [
           'Enero',
           'Febrero',
@@ -55,24 +67,47 @@
                     type: 'category',
                     labels: labels
                 }
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                }
             }
             };
 
     var products = [];
+    var products_buy = [];
     function myProducts(lista, data){
         data.forEach(function (k, v){
             lista.push(k.name);
-            console.log(lista);
             return lista;
         })
     };
     var quantities = [];
+    var quantities_buy = [];
     function myValues(lista, data){
         data.forEach(function (k, v){
             lista.push(k.y);
-            console.log(lista);
             return lista;
         })
+    };
+    /* Random Color */
+    function randomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+        return color;
+    }
+    var colors = []
+    function setColor(lista, data){
+        data.forEach(function(value, index){
+            console.log(value);
+            let color = randomColor();
+            lista.push(color);
+            return lista;
+        });
     };
 
     var graph = {
@@ -90,13 +125,30 @@
                     success: function (request) {
                         if (!request.hasOwnProperty('error')) {
                             var myChart = new Chart(ctx, {
-                                  type: 'line',
+                                  type: 'bar',
                                   data: {
                                       labels: labels,
                                       datasets: [{
-                                        label: 'Reporte de ventas año {{year}}',
-                                        backgroundColor: 'rgb(255, 99, 132)',
-                                        borderColor: 'rgb(255, 99, 132)',
+                                        label: 'Total',
+                                        backgroundColor: [
+                                          'rgba(255, 99, 132, 0.2)',
+                                          'rgba(255, 159, 64, 0.2)',
+                                          'rgba(255, 205, 86, 0.2)',
+                                          'rgba(75, 192, 192, 0.2)',
+                                          'rgba(54, 162, 235, 0.2)',
+                                          'rgba(153, 102, 255, 0.2)',
+                                          'rgba(201, 203, 207, 0.2)'
+                                        ],
+                                        borderColor: [
+                                          'rgb(255, 99, 132)',
+                                          'rgb(255, 159, 64)',
+                                          'rgb(255, 205, 86)',
+                                          'rgb(75, 192, 192)',
+                                          'rgb(54, 162, 235)',
+                                          'rgb(153, 102, 255)',
+                                          'rgb(201, 203, 207)'
+                                        ],
+                                        borderWidth: 1,
                                         data: request.data,
                                       }]
                                     },
@@ -126,26 +178,27 @@
                         if (!request.hasOwnProperty('error')) {
                             myProducts(products, request.data);
                             myValues(quantities, request.data);
+                            setColor(colors, products);
                             var myPie = new Chart(pie, {
                                   type: 'pie',
                                   data: {
                                       labels: products,
                                       datasets: [{
                                         label: 'Porcentaje de ventas por producto año {{year}}',
-                                        backgroundColor:  [
-                                          'rgb(255, 99, 132)',
-                                          'rgb(54, 162, 235)',
-                                          'rgb(255, 205, 86)'
-                                        ],
-                                        borderColor: 'rgb(255, 99, 132)',
+                                        backgroundColor: colors,
+                                        borderColor: '#e9eded',
                                         data: quantities,
                                       }]
                                     },
                                   options: {
                                     responsive: true,
+                                    plugins: {
+                                    legend: {
+                                        display: false,
+                                    }
+                                }
                                   },
                                 });
-                                console.log(myPie.data);
                                 return false;
                         }
                         message_error(request.error);
@@ -154,11 +207,57 @@
                         message_error(errorThrown + ' ' + textStatus);
                     }
                 });
-            }
-            };
+            },
+            getBuyProductsYearMonth: function () {
+                $.ajax({
+                    url: pathname,
+                    data: {
+                        'action': 'get_graph_buy_products_year_month'
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    success: function (request) {
+                        if (!request.hasOwnProperty('error')) {
+                            myProducts(products_buy, request.data);
+                            myValues(quantities_buy, request.data);
+                            setColor(colors, products_buy);
+                            var myBuyPie = new Chart(pie_buy, {
+                                  type: 'pie',
+                                  data: {
+                                      labels: products_buy,
+                                      datasets: [{
+                                        label: 'Porcentaje de ventas por producto año {{year}}',
+                                        backgroundColor:  colors,
+                                        borderColor: '#e9eded',
+                                        data: quantities_buy,
+                                      }]
+                                    },
+                                  options: {
+                                    responsive: true,
+                                    plugins: {
+                                    legend: {
+                                        display: false,
+                                    }
+                                }
+                                  },
+                                });
+                                return false;
+                        }
+                        message_error(request.error);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        message_error(errorThrown + ' ' + textStatus);
+                    }
+                });
+            },
+          };
             $(function () {
                 graph.getSalesYearMonth();
                 graph.getSalesProductsYearMonth();
+                graph.getBuyProductsYearMonth();
         });
 </script>
 {% endblock %}
