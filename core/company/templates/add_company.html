@@ -12,39 +12,100 @@
         {% endfor %}
     {% endif %}
     <div class="form-content">
-        <div class="form">
-            <form id='add-company-form' method="POST" action="">
+        <div class="form-company">
+            <form id='add-company-form' class="row g-3" method="POST" action="">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="{{action}}">
-                {% for field in form %}
-                <div class="mb-3">
-                    <label for="{{field.name}}" class="form-label">{{field.label}}</label>
-                    {{field}}
+                <!-- Fila 1 -->
+                <div class="col-md-4">
+                    <label for="{{form.name.label}}" class="form-label">{{form.name.label}}</label>
+                    {{form.name}}
                 </div>
-                {% endfor %}
-                <br>
-                <input type="submit" value="Agregar compañía">
+                <div class="col-md-4">
+                    <label for="{{form.f_name.label}}" class="form-label">{{form.f_name.label}}</label>
+                    {{form.f_name}}
+                </div>
+                <div class="col-md-2">
+                    <label for="{{form.fiscal_number.label}}" class="form-label">{{form.fiscal_number.label}}</label>
+                    {{form.fiscal_number}}
+                </div>
+                <div class="col-md-2">
+                    <label for="{{form.started_at.label}}" class="form-label">{{form.started_at.label}}</label>
+                    {{form.started_at}}
+                </div>
+                <!-- Fila 2 -->
+                <div class="col-md-4">
+                    <label for="{{form.activity.label}}" class="form-label">{{form.activity.label}}</label>
+                    {{form.activity}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.iva_condition.label}}" class="form-label">{{form.iva_condition.label}}</label>
+                    {{form.iva_condition}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.iibb.label}}" class="form-label">{{form.iibb.label}}</label>
+                    {{form.iibb}}
+                </div>
+                <!-- Fila 3 -->
+                <div class="col-md-6">
+                    <label for="{{form.address.label}}" class="form-label">{{form.address.label}}</label>
+                    {{form.address}}
+                </div>
+                <div class="col-md-2">
+                    <label for="{{form.city.label}}" class="form-label">{{form.city.label}}</label>
+                    {{form.city}}
+                </div>
+                <div class="col-md-2">
+                    <label for="{{form.state.label}}" class="form-label">{{form.state.label}}</label>
+                    {{form.state}}
+                </div>
+                <div class="col-md-2">
+                    <label for="{{form.postal.label}}" class="form-label">{{form.postal.label}}</label>
+                    {{form.postal}}
+                </div>
+                <!-- Fila 4 -->
+                <div class="col-md-4">
+                    <label for="{{form.phone_number.label}}" class="form-label">{{form.phone_number.label}}</label>
+                    {{form.phone_number}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.email.label}}" class="form-label">{{form.email.label}}</label>
+                    {{form.email}}
+                </div>
+                <div class="col-md-4">
+                    <label for="{{form.website.label}}" class="form-label">{{form.website.label}}</label>
+                    {{form.website}}
+                </div>
+                <!-- Fila 5 -->
+                <div class="col-md-12">
+                    <label for="{{form.image.label}}" class="form-label">{{form.image.label}}</label>
+                    {{form.image}}
+                </div>
             </form>
-            <script type="application/javascript">
-                $('#add-company-form').on('submit', function(e){
-                    e.preventDefault();
-                    var parameters = $(this).serializeArray();
-                    $.ajax({
-                        url: window.location.pathname,
-                        type: 'POST',
-                        data: parameters,
-                        dataType: 'json'
-                    }).done(function(data){
-                        if(!data.hasOwnProperty('error')){
-                            location.href = '{{ list_url }}';
-                            return false;
-                        };
-                        message_error(data.error);
-                    }).always(function(data){
-                    });
-                });
-                </script>
         </div>
+        <input type="submit" class="btn" form="add-company-form" value="Agregar compañía">
+        <script type="application/javascript">
+                    $('#add-company-form').on('submit', function(e){
+                        e.preventDefault();
+                        // var parameters = $(this).serializeArray();
+                        var parameters = new FormData(this)
+                        $.ajax({
+                            url: window.location.pathname,
+                            type: 'POST',
+                            data: parameters,
+                            dataType: 'json',
+                            processData: false,
+                            contentType: false,
+                        }).done(function(data){
+                            if(!data.hasOwnProperty('error')){
+                                location.href = '{{ list_url }}';
+                                return false;
+                            };
+                            message_error(data.error);
+                        }).always(function(data){
+                        });
+                    });
+        </script>
     </div>
 
 {% endblock %}

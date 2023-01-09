@@ -1,0 +1,55 @@
+{% extends 'list.html' %}
+{% load static %}
+
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 10%;">Nro</th>
+        <th scope="col" style="width: 20%;">Nombre</th>
+        <th scope="col" style="width: 50%;">Descripción</th>
+        <th scope="col" style="width: 20%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for cat in categories %}
+    <tr>
+        <td>{{ cat.id }}</td>
+        <td>{{ cat.name }}</td>
+        <td>{{ cat.description }}</td>
+        <td>
+            <!-- Update Button ver manera de hacerlo global-->
+            <a type="button" class="btn" href="{% url 'update-document-category' pk=cat.id %}"><i class="fa-solid fa-marker"></i></a>
+            <!-- Delete Button ver manera de hacerlo global-->
+            <button type="button" data-bs-toggle="modal"  class="btn" data-bs-target="#delete-modal{{ cat.id }}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <div class="modal fade" id="delete-modal{{ cat.id }}" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro que desea eliminar esta categoría?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Es posible que al eliminar la categoría algunos documentos sufran cambios<br>
+                            Categoría: <b>{{cat.name}}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{% url 'delete-document-category' pk=cat.id %}" method="POST">
+                                {% csrf_token %}
+                                <button value={{cat.id}} name="category_id" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="8" class="text-center">No se encuentran registros de categorías</td>
+    </tr>
+
+    {% endfor %}
+{% endblock %}

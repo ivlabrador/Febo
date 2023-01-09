@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from .models import Company
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 
 class CompanyForm(ModelForm):
@@ -15,12 +16,21 @@ class CompanyForm(ModelForm):
         fields = '__all__'
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Ingrese un nombre'}),
+            'f_name': forms.TextInput(attrs={'placeholder': 'Ingrese un nombre de fantasía'}),
             'fiscal_number': forms.TextInput(attrs={'placeholder': 'Ingrese un numero de CUIT'}),
-            'address': forms.TextInput(attrs={'placeholder': 'Ingrese una dirección'}),
             'activity': forms.TextInput(attrs={'placeholder': 'Ingrese la actividad principal'}),
+            'started_at': DatePickerInput(format='%d-%m-%Y', attrs={
+                'autocomplete': 'off',
+                'class': 'form-control',
+                'id': 'started_at',
+                'type': 'date'
+            }),
+            'address': forms.TextInput(attrs={'placeholder': 'Calle - Bloque - Piso - Departamento - Numero '}),
+
             'phone_number': forms.TextInput(attrs={'placeholder': 'Ingrese un teléfono'}),
             'email': forms.TextInput(attrs={'placeholder': 'Ingrese un email'}),
             'website': forms.TextInput(attrs={'placeholder': 'Ingrese una dirección web'}),
+            'image': forms.FileInput(attrs={'class': 'form-control', 'placeholder': 'JPG - PNG'}),
         }
 
     def save(self, commit=True):
@@ -34,3 +44,5 @@ class CompanyForm(ModelForm):
         except Exception as e:
             data['error'] = str(e)
         return data
+
+

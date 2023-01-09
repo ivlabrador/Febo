@@ -51,6 +51,7 @@ LOCAL_APPS = [
     'core.stock',
     'core.sales',
     'core.purchase',
+    'core.document',
     'core.sql_django',
     'core.api',
 ]
@@ -144,6 +145,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880 # 5MB = 5 *1024 *1024 = 5242880
+
 LOGIN_REDIRECT_URL = '/user/dashboard/' #al momento #nos debe mandasr al dashboard
 
 LOGOUT_REDIRECT_URL = '/login/'
@@ -160,10 +163,25 @@ AUTH_USER_MODEL = 'user.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-"""  OPCIONES DE COMPRA  """
+"""  OPCIONES DE FISCALES  """
+# Ingresos Brutos
+IIBB = (
+    ("Exento", "Exento"),
+    ("Contribuyente Local", "Contribuyente Local"),
+    ("Convenio Multilateral", "Convenio Multilateral")
+)
 
-# IVA OPTIONS // %
+# IVA OPTIONS
 IVA_CONDITION = (
+    ("Exento", "Exento"),
+    ("Responsable Monotributo", "Responsable Monotributo"),
+    ("Responsable Inscripto", "Responsable Inscripto"),
+    ("Monotributista Social", "Monotributista Social"),
+    ("No Responsable", "No Responsable")
+)
+
+# %
+IVA = (
     ("10.5", "10.5"),
     ("21", "21"),
     ("27", "27")
@@ -180,7 +198,7 @@ PAY_CONDITION = (
     ("120", "120"),
 )
 
-#Sale Type
+# Tipos de facturas
 SALE_TYPE = (
     ("A", "A"),
     ("B", "B"),

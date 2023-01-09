@@ -32,7 +32,6 @@
                     <label for="{{form.iva.label}}" class="form-label">{{form.iva.label}}</label>
                     {{form.iva}}
                 </div>
-
                 <div class="col-md-11">
                     <label for="{{form.image.label}}" class="form-label">{{form.image.label}}</label>
                     {{form.image}}
@@ -50,15 +49,12 @@
                     {{form.is_active}}
                 </div>
             </form>
-
         </div>
         <input type="submit" class="btn" form="add-product-form" value="Agregar producto">
         <script type="application/javascript">
                 $('#add-product-form').on('submit', function(e){
                     e.preventDefault();
-                    // var parameters = $(this).serializeArray();
                     var parameters = new FormData(this);
-
                     $.ajax({
                         url: window.location.pathname,
                         type: 'POST',

@@ -1,0 +1,107 @@
+{% extends 'list.html' %}
+{% load static %}
+{% block head_list %}
+
+{% endblock %}
+
+{% block columns %}
+    <tr>
+        <th scope="col" style="width: 5%;">Nro</th>
+        <th scope="col" style="width: 20%;">Nombre</th>
+        <th scope="col" style="width: 20%;">Categoría</th>
+        <th scope="col" style="width: 11%;">Entidad</th>
+        <th scope="col" style="width: 12%;">Fecha</th>
+        <th scope="col" style="width: 12%;">Vencimiento</th>
+        <th scope="col" style="width: 20%;">Opciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+    {% for document in documents %}
+    <tr>
+        <td>{{ document.id }}</td>
+        <td>{{ document.name }}</td>
+        <td>{{ document.category }}</td>
+        <td>{{ document.entity }}</td>
+        <td>{{ document.started_at }}</td>
+        <td>{{ document.expiration }}</td>
+        <td>
+             <!-- Descargar un documento -->
+            <a target="_blank" type="button" class="btn" href="{% url 'download-file' document.id %}"><i class="fa-sharp fa-solid fa-download"></i></a>
+            <!-- Enviar documento -->
+            <button type="button" data-bs-toggle="modal" class="btn" data-bs-target="#send-email{{ document.id }}">
+                <i class="fa-solid fa-share-from-square"></i>
+            </button>
+            <div class="modal fade" id="send-email{{ document.id }}" tabindex="-1" aria-labelledby="FormModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-title">Enviar Documento</h5>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{% url 'send-document' pk=document.id %}" id="send-email-form" method="POST">
+                                {% csrf_token %}
+                                <div>
+                                    <label for="email" class="form-label">Email</label>
+                                    <input name="email" type="email" maxlength="50" id="id_email" class="form-control" required>
+                                </div>
+                                <br>
+                                <div>
+                                    <label for="description" class="form-label">Mensaje</label>
+                                    <textarea name="description" maxlength="500" id="id_description" class="form-control" required></textarea>
+                                </div>
+                                    <input name="document" id="id_document" type="hidden" value="{{ document.id }}">
+                            </form>
+                            <br>
+                            Documento: <b>{{document.name}}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-outline-primary" form="send-email-form" value="Enviar">
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Update Button ver manera de hacerlo global-->
+            <a type="button" class="btn" href="{% url 'update-document' pk=document.id %}"><i class="fa-solid fa-marker"></i></a>
+            <!-- Delete Button ver manera de hacerlo global-->
+            <button type="button" data-bs-toggle="modal"  class="btn" data-bs-target="#delete-modal{{ document.id }}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <div class="modal fade" id="delete-modal{{ document.id }}" tabindex="-1" aria-labelledby="DeleteModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">¿Seguro que desea eliminar este documento?</h5>
+                        </div>
+                        <div class="modal-body">
+                            Si el documento es eliminado se borrarán todos sus datos existentes<br>
+                            Documento: <b>{{document.name}}</b>
+                        </div>
+                        <div class="modal-footer">
+                            <form action="{% url 'delete-document' pk=document.id %}" method="POST">
+                                {% csrf_token %}
+                                <button value={{document.id}} name="document_id" class="btn btn-outline-danger">Eliminar</button>
+                            </form>
+                            <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Salir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+
+
+    {% empty %}
+    <tr>
+        <td colspan="8" class="text-center">No se encuentran registros de documentos</td>
+    </tr>
+    {% endfor %}
+
+
+{% endblock %}
+{% block other_buttons %}
+        <a href="{% url 'list-document-category' %}" class="btn btn-light btn-add">
+            <i class='bx bx-layer'></i> Categorías
+        </a>
+{% endblock %}

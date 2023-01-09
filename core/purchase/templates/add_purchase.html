@@ -2,15 +2,15 @@
 {% load static %}
 {% block head_list %}
 <!-- Select2 Para iniciar busquedas-->
-<link href="{% static 'lib/select2-4.1.0/dist/css/select2.css' %}" rel="stylesheet"/>
+<link href="{% static 'lib/select2-4.1.0/dist/css/select2-1.css' %}" rel="stylesheet"/>
 <script src="{% static 'lib/select2-4.1.0/dist/js/select2.min.js' %}"></script>
 <!-- Select2 Para iniciar busquedas -->
 <link href="{% static 'lib/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.css' %}" rel="stylesheet"/>
 <script src="{% static 'lib/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.js' %}"></script>
 <!-- Mi JS -->
-<script type="text/javascript" charset="utf8" src="{% static 'js/purchase/purchaseform.js' %}"></script>
-<!-- My css
-<link rel="stylesheet" href="{% static 'css/formsale-style.css' %}"> -->
+<script type="text/javascript" charset="utf8" src="{% static 'js/purchase/purchaseformm.js' %}"></script>
+<!-- My css  -->
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -26,9 +26,9 @@
     {% endif %}
     <div class="form-content">
         <div class="form-purchase">
-            <form id='add-purchase-form' class="row g-3"  method="POST" action="" data-url="{{ list_url }}>
+            <form id='add-purchase-form' class="row g-3"  method="POST" action="" data-url="{{ list_url }}">
                 <input type="hidden" name="action" value="{{action}}">
-                <div class="col-md-6">
+                <div class="col-md-3" id="select-group">
                     <label>Proveedor</label>
                     <div class="input-group" id="input-group-2">
                         <div class="input-group-append" id="input-group-2-sub">
@@ -43,11 +43,11 @@
                     <label for="{{form.date.label}}" class="form-label">{{form.date.label}}</label>
                     {{form.date}}
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <label for="{{form.buy_num.label}}" class="form-label">{{form.buy_num.label}}</label>
                     {{form.buy_num}}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <label for="{{form.buy_type.label}}" class="form-label">{{form.buy_type.label}}</label>
                     {{form.buy_type}}
                 </div>

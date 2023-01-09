@@ -27,7 +27,7 @@ class Product(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
     brand = models.CharField(max_length=150, verbose_name='Marca', blank=True)
     model = models.CharField(max_length=50, verbose_name='Modelo', unique=True)
-    iva = models.CharField(choices=settings.IVA_CONDITION, verbose_name='IVA', null=False, max_length=4)
+    iva = models.CharField(choices=settings.IVA, verbose_name='IVA', null=False, max_length=4)
     description = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
     category = models.ManyToManyField(Category, verbose_name='Categorías')
     image = models.ImageField(upload_to='product/%Y/%m/%d', null=True, blank=True, verbose_name='Imagen')

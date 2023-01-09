@@ -185,10 +185,10 @@ class DeleteUser(DeleteView, ValidatePermission):
                 user_id = request.POST['user_id']
                 user = User.objects.get(pk=user_id)
                 user.delete()
-                messages.success(request, f'Producto eliminado: {user.username}')
+                messages.success(request, f'Usuario eliminado: {user.username}')
                 return redirect(self.url_redirect)
             else:
-                messages.warning(request, f'Error al eliminar el proveedor')
+                messages.warning(request, f'Error al eliminar el usuario')
                 return redirect(self.success_url)
 
     def get_context_data(self, **kwargs):

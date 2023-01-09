@@ -1,0 +1,78 @@
+{% extends 'complete.html' %}
+{% load static %}
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="form-content">
+        <div class="form-company">
+            <form id='add-document-form' class="row g-3" method="POST" action="" data-url="{{list_url}}">
+                <input type="hidden" name="action" value="{{action}}">
+                {% csrf_token %}
+                <!-- Fila 1 -->
+                <div class="col-md-6">
+                    <label for="{{form.name.label}}" class="form-label">{{form.name.label}}</label>
+                    {{form.name}}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{form.category.label}}" class="form-label">{{form.category.label}}</label>
+                    {{form.category}}
+                </div>
+                <!-- Fila 2 -->
+                <div class="col-md-6">
+                    <label for="{{form.entity.label}}" class="form-label">{{form.entity.label}}</label>
+                    {{form.entity}}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{form.started_at.label}}" class="form-label">{{form.started_at.label}}</label>
+                    {{form.started_at}}
+                </div>
+                <div class="col-md-3">
+                    <label for="{{form.expiration.label}}" class="form-label">{{form.expiration.label}}</label>
+                    {{form.expiration}}
+                </div>
+                <!-- Fila 3 -->
+                <div class="col-md-12">
+                    <label for="{{form.description.label}}" class="form-label">{{form.description.label}}</label>
+                    {{form.description}}
+                </div>
+                <!-- Fila 4 -->
+                <div class="col-md-12">
+                    <label for="{{form.file.label}}" class="form-label">{{form.file.label}}</label>
+                    {{form.file}}
+                </div>
+            </form>
+        </div>
+        <input type="submit" class="btn" form="add-document-form" value="Agregar documento">
+        <script type="application/javascript">
+                    $('#add-document-form').on('submit', function(e){
+                        e.preventDefault();
+                        var parameters = new FormData(this);
+                        $.ajax({
+                            url: window.location.pathname,
+                            type: 'POST',
+                            action: '{{action}}',
+                            data: parameters,
+                            dataType: 'json',
+                            processData: false,
+                            contentType: false,
+                        }).done(function(data){
+                            if(!data.hasOwnProperty('error')){
+                                location.href = '{{ list_url }}';
+                                return false;
+                            };
+                            message_error(data.error);
+                        }).always(function(data){
+                        });
+                    });
+        </script>
+    </div>
+
+{% endblock %}

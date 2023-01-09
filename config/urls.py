@@ -32,6 +32,7 @@ urlpatterns = [
     path('stock/', include('core.stock.urls')),
     path('sales/', include('core.sales.urls')),
     path('purchase/', include('core.purchase.urls')),
+    path('document/', include('core.document.urls')),
     path('api/', include('core.api.urls')),
 
 ]

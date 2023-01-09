@@ -66,7 +66,6 @@ class ChangePassword(FormView):
             if form.is_valid():
                 user = User.objects.get(token=self.kwargs['token'])
                 user.set_password(request.POST['password'])
-                #user.token = uuid.uuid4()
                 user.save()
             else:
                 data['error'] = form.errors

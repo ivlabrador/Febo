@@ -63,7 +63,6 @@ function submit_ajax_lot(url, title, content, parameters, callback) {
                         success: function (request) {
                             if (!request.hasOwnProperty('error')) {
                                 callback(request);
-                                ;
                                 return false;
                             }
                         },

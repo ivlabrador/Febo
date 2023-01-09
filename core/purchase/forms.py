@@ -63,5 +63,5 @@ class PurchaseForm(ModelForm):
 class ReportPurchaseForm(forms.Form):
     date_ranger = forms.CharField(required=True, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'autocomplete': 'off'
+        'autocomplete': 'off',
     }))

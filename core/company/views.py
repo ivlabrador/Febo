@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.views.generic import UpdateView, CreateView
 from .models import Company
@@ -7,14 +7,13 @@ from .forms import CompanyForm
 from django.urls import reverse_lazy
 from config.permission import ValidatePermission
 
-# Create your views here.
 class CreateCompany(ValidatePermission, CreateView):
     model = Company
     form_class = CompanyForm
     template_name = 'add_company.html'
     success_url = reverse_lazy('dashboard')
     url_redirect = success_url
-    #permission_required = 'change_company' # Lo veremos mas adelante el tema permisos
+    permission_required = 'change_company'
 
     def get_object(self, queryset=None):
         company = Company.objects.all()

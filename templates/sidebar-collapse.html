@@ -24,8 +24,11 @@
                 <i class='bx bxs-chevron-down arrow'></i>
             </div>
             <ul class="sub-menu">
-                <li><a href="#"><i class='bx bx-info-circle'></i>Info</a></li>
-                <li><a href="{% url 'add-company' %}"><i class='bx bx-plus'></i>Agregar</a></li>
+                <li><a href="#"><i class='bx bx-info-circle'></i> Info</a></li>
+                {% if request.user.is_superuser %}
+                <li><a href="{% url 'add-company' %}"><i class='bx bx-plus'></i> Agregar</a></li>
+                {% endif %}
+                <li><a href="{% url 'list-document' %}"><i class='bx bxs-report'></i> Documentos</a></li>
             </ul>
         </li>
         <li class="sidebar-li">
