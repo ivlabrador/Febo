@@ -2,7 +2,7 @@ from django.urls import path
 # Views of categories
 from .views import CreateCategory, ListCategory, UpdateCategory, DeleteCategory
 # Vies of products
-from .views import CreateProduct, ListProduct, UpdateProduct, DeleteProduct
+from .views import CreateProduct, ListProduct, UpdateProduct, DeleteProduct, MassiveCharge
 
 urlpatterns = [
     # Category
@@ -13,6 +13,7 @@ urlpatterns = [
     # Product
     path('add-product/', CreateProduct.as_view(), name='add-product'),
     path('list-product/', ListProduct.as_view(), name='list-product'),
+    path('massive-product/', MassiveCharge.as_view(), name='massive-product'),
     path('update-product/<int:pk>/', UpdateProduct.as_view(), name='update-product'),
     path('delete-product/<int:pk>', DeleteProduct.as_view(), name='delete-product'),
 ]

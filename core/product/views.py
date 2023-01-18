@@ -2,14 +2,19 @@ from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import CategoryForm, ProductForm
-from .models import Category, Product
+from .forms import CategoryForm, ProductForm, MassiveProductForm
+from .models import Category, Product, MassiveProduct
 from config.permission import ValidatePermission
 from django.contrib import messages
-
+from config import settings as s
+import os
+from .massive_tools import make_massive_charge, check_categories, is_active
 # Categories
 
 # Create Category
+from ..user.models import User
+
+
 class CreateCategory(ValidatePermission, CreateView):
     model = Category
     form_class = CategoryForm
@@ -61,7 +66,6 @@ class ListCategory(ValidatePermission, ListView):
 
     except Exception as e:
         data['error'] = str(e)
-
 
 
     def get_context_data(self, **kwargs):
@@ -256,4 +260,57 @@ class DeleteProduct(ValidatePermission, DeleteView):
         context['entity'] = 'Productos'
         context['list_url'] = self.success_url
 
+        return context
+
+# Massive Product Charge
+class MassiveCharge(CreateView):
+    model = MassiveProduct
+    form_class = MassiveProductForm
+    template_name = 'massive_product.html'
+    success_url = reverse_lazy('list-product')
+    url_redirect = success_url
+    permission_required = 'massive_product'
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+
+        if request.method == 'POST':
+            id_session = int(request.user.id)
+            user = User.objects.get(pk=id_session)
+            action = request.POST['action']
+            if action == 'add':
+                file = request.FILES['file']
+                products = make_massive_charge(file)
+                category = Category
+                for product in products:
+                    instance = Product(
+                        name=product[0],
+                        brand=product[1],
+                        model=product[2],
+                        iva=product[3],
+                        image=product[4],
+                        description=product[6],
+                        is_active=is_active(product[7])
+                    )
+                    instance.save()
+                    lista = check_categories(product[5], category)
+                    for item in lista:
+                        instance.category.add(item)
+                    instance.save()
+                instance_massive = MassiveProduct(
+                    charger=user,
+                    file=file,
+                )
+                instance_massive.save()
+                return redirect(reverse_lazy('list-product'))
+            else:
+                data['error'] = 'Form is not valid'
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #context['title'] = 'Carga masiva de productos'
+        context['entity'] = 'Productos'
+        context['list_url'] = self.success_url
+        context['action'] = 'add'
         return context

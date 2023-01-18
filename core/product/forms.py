@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Category, Product
+from .models import Category, Product, MassiveProduct
 
 class CategoryForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -59,3 +59,16 @@ class ProductForm(ModelForm):
             data['error'] = str(e)
         return data
 
+class MassiveProductForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['file'].widget.attrs['autofocus'] = True
+    class Meta:
+        model = MassiveProduct
+        fields = ['file', ]
+        widgets = {
+            'file': forms.FileInput(attrs={'class': 'form-control', 'required': 'true'}),
+        }
+
+
+        

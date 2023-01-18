@@ -1,7 +1,8 @@
+from core.user.models import User
 from django.db import models
 from config import settings
 from django.forms import model_to_dict
-
+from config.validators import validate_file_excel
 
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
@@ -24,13 +25,13 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=150, verbose_name='Nombre', unique=True)
+    name = models.CharField(max_length=150, verbose_name='Nombre')
     brand = models.CharField(max_length=150, verbose_name='Marca', blank=True)
-    model = models.CharField(max_length=50, verbose_name='Modelo', unique=True)
+    model = models.CharField(max_length=50, verbose_name='Modelo')
     iva = models.CharField(choices=settings.IVA, verbose_name='IVA', null=False, max_length=4)
     description = models.CharField(max_length=500, null=True, blank=True, verbose_name='Descripción')
     category = models.ManyToManyField(Category, verbose_name='Categorías')
-    image = models.ImageField(upload_to='product/%Y/%m/%d', null=True, blank=True, verbose_name='Imagen')
+    image = models.ImageField(upload_to='product/%Y/%m/%d', null=True, blank=True, verbose_name='Imagen', default=f'{settings.STATIC_URL}img/empty.png')
     is_active = models.BooleanField(default=True, verbose_name='¿Es activo?')
     created_at = models.DateField(auto_now_add=True, null=False, verbose_name='Inserido en el sistema')
     updated_at = models.DateTimeField(auto_now=True, null=True, verbose_name='Actualizado')
@@ -57,4 +58,24 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
+        ordering = ['-id']
+
+class MassiveProduct(models.Model):
+    file = models.FileField(upload_to='massive_product/%Y/%m/%d', null=False, verbose_name='Archivo', validators=[validate_file_excel])
+    created_at = models.DateField(auto_now_add=True, null=False, verbose_name='Inserido en el sistema')
+    charger = models.ForeignKey(User, editable=True, on_delete=models.CASCADE, verbose_name='Cargado por ', null=False)
+
+    def get_file(self):
+        if self.file:
+            return f'{settings.MEDIA_URL}{self.file}'
+        return None
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['file'] = self.get_file()
+        return item
+
+    class Meta:
+        verbose_name = 'Carga Masiva'
+        verbose_name_plural = 'Cargas Masivas'
         ordering = ['-id']

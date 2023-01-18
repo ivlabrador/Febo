@@ -1,0 +1,60 @@
+{% extends 'complete.html' %}
+{% load static %}
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="form-content">
+        <div>
+            <h3>Como realizar la carga masiva de productos</h3>
+            <p>Para realizar la carga masiva primero debe descargar el archivo modelo</p>
+            <p>Después de completar el archivo tal cual como indica su especificación, usted podrá realizar la carga masiva</p>
+        </div>
+        <div class="form-category">
+            <form id='add-category-form' method="POST" action="">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="{{action}}">
+                {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{field.name}}" class="form-label">{{field.label}}</label>
+                    {{field}}
+                </div>
+                {% endfor %}
+            </form>
+        </div>
+        <input type="submit" class="btn" form="add-category-form" value="Cargar productos">
+    </div>
+<script type="application/javascript">
+                $('#add-category-form').on('submit', function(e){
+                    e.preventDefault();
+                    var parameters = new FormData(this);
+                    $.ajax({
+                        url: window.location.pathname,
+                        type: 'POST',
+                        data: parameters,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                    }).done(function(data){
+                        if(!data.hasOwnProperty('error')){
+                            location.href = '{{ list_url }}';
+                            return false;
+                        };
+                        message_error(data.error);
+                    }).always(function(data){
+                        location.href = '{{ list_url }}';
+                    });
+                });
+                </script>
+
+{% block javascript %}
+
+{% endblock %}
+{% endblock %}
